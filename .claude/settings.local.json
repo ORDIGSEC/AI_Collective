@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cloudflared tunnel:*)",
+      "Bash(sudo systemctl status:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker:*)",
+      "Bash(ss:*)",
+      "Bash(curl:*)",
+      "Bash(host:*)",
+      "Bash(test:*)"
+    ]
+  }
+}

@@ -1,8 +1,10 @@
-version: '3.8'
-
 services:
   app:
-    build: .
+    # Use pre-built image from GitHub Container Registry
+    # To build locally instead, uncomment 'build: .' and comment out 'image:'
+    image: ghcr.io/ordigsec/hrmeetup-website:latest
+    # build: .
+    pull_policy: always
     ports:
       - "8080:8080"
     restart: unless-stopped

@@ -26,8 +26,25 @@ Thumbs.db
 coverage/
 .nyc_output/
 
+# Deployment scripts
+deploy.sh
+preflight-check.sh
+.deployrc
+deploy.log
+
+# Docker
+docker-compose*.yml
+
+# Claude
+.claude/
+
+# Angular cache
+.angular/
+
 # Misc
 *.log
 *.tmp
+*.pid
+.env
 .env.local
 .env.*.local

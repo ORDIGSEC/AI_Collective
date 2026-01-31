@@ -2,7 +2,7 @@ services:
   app:
     # Use pre-built image from GitHub Container Registry
     # To build locally instead, uncomment 'build: .' and comment out 'image:'
-    image: ghcr.io/ordigsec/hrmeetup-website:latest
+    image: ghcr.io/ordigsec/ai_collective:latest
     # build: .
     pull_policy: always
     ports:

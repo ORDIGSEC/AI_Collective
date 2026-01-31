@@ -4,166 +4,136 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-page website for a monthly AI Meetup in Hood River, Oregon. Built with HTML + HTMX only (no JavaScript). Events are loaded dynamically from Google Calendar via a backend API. Served via nginx in Docker with Cloudflare Tunnel for secure public access.
+Single-page website for a monthly AI Meetup in Hood River, Oregon. Built with Angular 19 (standalone components). Events are loaded dynamically from Google Calendar API (client-side). Deployed on Google Cloud Run.
 
-**Live URLs:**
-- https://hoodriveraicollective.com
-- https://www.hoodriveraicollective.com
+**Live URL:** <https://hoodriveraicollective.com>
 
 **Event Data Source:**
+
 - Google Calendar API (public calendar with API key)
-- Backend service fetches events and returns HTML fragments
-- No iframe embedding - custom design maintained
-
-## Key Constraints
-
-- **No JavaScript** - Use HTMX for all dynamic interactions
-- **No direct port exposure** - nginx is only accessible via Cloudflare Tunnel (localhost:8080)
-- **Network isolation** - Use `web_public` network for nginx; `internal` network for backend service
-- **No iframe embedding** - Calendar events fetched via backend API, rendered as custom HTML
+- Angular HttpClient fetches events directly from browser
+- No backend required - fully client-side
 
 ## Commands
 
 ```bash
-# Start services
+# Install dependencies
+npm install
+
+# Development server (localhost:4200)
+npm start
+
+# Production build
+npm run build:prod
+
+# Run tests
+npm test
+
+# Docker build
+docker build -t ai-collective .
+
+# Docker run locally
+docker run -p 8080:8080 ai-collective
+
+# Docker Compose
 docker compose up -d
-
-# Stop services
 docker compose down
-
-# View logs
-docker compose logs -f nginx
-docker compose logs -f backend
-
-# Reload nginx after HTML/CSS edits (no restart needed)
-docker compose exec nginx nginx -s reload
-
-# Restart backend after code changes
-docker compose restart backend
-
-# Test locally
-curl localhost:8080
-curl localhost:8080/api/events
-
-# Check Cloudflare Tunnel status
-cloudflared tunnel info hr-ai-sites
-sudo journalctl -u cloudflared -f
-
-# Restart tunnel if needed
-sudo systemctl restart cloudflared
+docker compose logs -f
 ```
 
 ## Project Structure
 
 ```
-hrmeetup-website/
-├── docker-compose.yml        # Container orchestration
-├── .env                      # Environment variables (API key, calendar ID)
-├── nginx/
-│   └── nginx.conf           # nginx configuration with security headers
-├── html/
-│   ├── index.html           # Main page
-│   └── styles.css           # Stylesheet
-├── backend/                  # Backend service (Python Flask or Node Express)
-│   ├── Dockerfile
-│   ├── app.py / index.js    # API endpoints
-│   └── requirements.txt / package.json
-└── TASK_BREAKDOWN.md         # Live demo task assignments
+AI_Collective/
+├── src/
+│   ├── app/
+│   │   ├── app.component.ts           # Root component
+│   │   ├── app.config.ts              # App configuration
+│   │   ├── components/
+│   │   │   ├── header/                # Site header
+│   │   │   ├── event-list/            # Events container with filters
+│   │   │   ├── event-card/            # Individual event display
+│   │   │   └── footer/                # Site footer
+│   │   ├── services/
+│   │   │   └── calendar.service.ts    # Google Calendar API integration
+│   │   └── models/
+│   │       └── event.model.ts         # Event type definitions
+│   ├── environments/
+│   │   ├── environment.ts             # Dev config
+│   │   └── environment.prod.ts        # Prod config (API key, calendar ID)
+│   ├── index.html
+│   ├── main.ts
+│   └── styles.scss                    # Global styles
+├── Dockerfile                          # Multi-stage build for Cloud Run
+├── nginx.conf                          # nginx config for SPA routing
+├── docker-compose.yml                  # Local Docker orchestration
+├── angular.json                        # Angular CLI configuration
+├── package.json
+└── tsconfig.json
 ```
 
 ## Architecture
 
 ```
-Internet → Cloudflare (SSL/DDoS) → Tunnel → localhost:8080 → nginx (web_public) → static files
-                                                                      ↓
-                                                                   /api/* → backend (internal) → Google Calendar API
+Browser (Angular) → Google Calendar API (direct HTTPS)
+        ↓
+   Cloud Run (containerized nginx serving Angular build)
 ```
 
-**Network Topology:**
-- `web_public`: nginx container (exposed to localhost:8080)
-- `internal`: nginx + backend containers (not externally accessible)
-- Backend has no exposed ports - only accessible via nginx proxy
+**Key Points:**
 
-**Tunnel Configuration:**
-- Tunnel name: `hr-ai-sites` (ID: e3848467-6bf1-42e6-a94f-3c856b179897)
-- Config: `/etc/cloudflared/config.yml`
-- Routes both `hoodriveraicollective.com` and `www.` to localhost:8080
+- No backend service - Angular calls Google Calendar API directly
+- API key is exposed in browser (acceptable for public calendar)
+- nginx serves static files with SPA routing (fallback to index.html)
+- Cloud Run scales to zero when idle
 
-## HTMX Usage
+## Configuration
 
-All interactivity must use HTMX attributes instead of JavaScript:
+**Environment files** (`src/environments/`):
 
-```html
-<!-- Load calendar events on page load -->
-<div id="schedule"
-     hx-get="/api/events"
-     hx-trigger="load"
-     hx-swap="innerHTML">
-  Loading events...
-</div>
+- `environment.ts` - Development settings
+- `environment.prod.ts` - Production settings (used in build)
 
-<!-- Filter buttons -->
-<button hx-get="/api/events/upcoming"
-        hx-target="#schedule"
-        hx-swap="innerHTML">
-  Upcoming Events
-</button>
+Required values:
 
-<button hx-get="/api/events/past"
-        hx-target="#schedule"
-        hx-swap="innerHTML">
-  Past Events
-</button>
-
-<!-- Auto-refresh every 5 minutes (optional) -->
-<div hx-get="/api/events"
-     hx-trigger="every 5m"
-     hx-swap="innerHTML">
-</div>
+```typescript
+export const environment = {
+  production: true,
+  googleApiKey: 'YOUR_API_KEY',
+  calendarId: 'YOUR_CALENDAR_ID@group.calendar.google.com'
+};
 ```
 
-## nginx Requirements
+## Cloud Run Deployment
 
-- Serve static files from `/usr/share/nginx/html`
-- Proxy `/api/*` requests to backend service
-- Enable gzip compression
-- Set security headers: `X-Frame-Options`, `X-Content-Type-Options`, `X-XSS-Protection`
-- Cache static assets appropriately
-- Run as non-root user
+```bash
+# Build and push to Artifact Registry
+gcloud builds submit --tag gcr.io/PROJECT_ID/ai-collective
 
-Example proxy configuration:
-```nginx
-location /api/ {
-    proxy_pass http://backend:5000/api/;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-}
+# Deploy to Cloud Run
+gcloud run deploy ai-collective \
+  --image gcr.io/PROJECT_ID/ai-collective \
+  --platform managed \
+  --region us-west1 \
+  --allow-unauthenticated \
+  --port 8080
 ```
 
-## Backend Service Requirements
+## Design Guidelines
 
-- Fetch events from Google Calendar API (public calendar)
-- Use simple API key authentication (not service account)
-- Return HTML fragments (not JSON) for HTMX consumption
-- Run on `internal` network only
-- Handle errors gracefully
+- Clean, modern design with Hood River identity
+- **Avoid generic AI aesthetics** - no purple gradients, no robot illustrations
+- Color palette: Dark navy (#1a1a2e), accent red (#e94560)
+- Typography: Inter font family
+- Responsive layout
+- Accessibility: ARIA labels, focus states, contrast ratios
 
-**Environment variables:**
-- `GOOGLE_API_KEY`: Public API key (can be shared, rate-limited)
-- `CALENDAR_ID`: Public calendar ID (e.g., `example@group.calendar.google.com`)
+## Adding a Backend Later
 
-**Endpoints:**
-- `GET /api/events` - All events as HTML
-- `GET /api/events/upcoming` - Future events only as HTML
-- `GET /api/events/past` - Past events only as HTML
+If you need server-side functionality:
 
-## Design Requirements
-
-- Clean, modern, desktop-focused design (mobile responsive TBD in future)
-- Accessible (semantic HTML, ARIA labels)
-- **Avoid generic AI aesthetics** - create distinctive, polished interface
-  - No purple/blue gradients
-  - No robot illustrations
-  - Create unique identity for Hood River tech community
-- 2026 meetup schedule with 3rd Thursday of each month as pattern
-- Events styled as cards or clean list format
+1. Create `backend/` directory with Node/Python/Go service
+2. Add service to `docker-compose.yml` on internal network
+3. Update nginx.conf to proxy `/api/*` to backend
+4. Deploy as separate Cloud Run service
+5. Update Angular to call backend instead of Calendar API directly

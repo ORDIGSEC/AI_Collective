@@ -53,11 +53,35 @@ import { CalendarEvent } from '../../models/event.model';
       gap: 1.5rem;
       padding: 2rem;
       background: white;
-      border: 1px solid rgba(59, 47, 37, 0.06);
-      border-radius: 16px;
+      border: 1px solid rgba(59, 47, 37, 0.08);
+      border-left: 5px solid var(--color-bark);
+      border-radius: 2px 12px 12px 2px;
       box-shadow: var(--shadow-card);
       transition: box-shadow var(--transition-base), transform var(--transition-base);
       align-items: start;
+      position: relative;
+    }
+
+    /* Wood grain texture on left border */
+    .event-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -5px;
+      width: 5px;
+      height: 100%;
+      border-radius: 2px 0 0 2px;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          var(--color-bark) 0px,
+          var(--color-bark-light) 2px,
+          var(--color-bark) 3px,
+          rgba(59, 47, 37, 0.7) 5px,
+          var(--color-bark) 6px,
+          var(--color-bark-light) 8px,
+          var(--color-bark) 10px
+        );
     }
 
     .event-card:hover {
@@ -70,12 +94,28 @@ import { CalendarEvent } from '../../models/event.model';
     }
 
     .event-date-badge {
-      background: var(--color-forest);
+      background:
+        repeating-linear-gradient(
+          180deg,
+          var(--color-forest-deep) 0px,
+          var(--color-forest) 2px,
+          var(--color-forest-deep) 3px,
+          var(--color-forest-light) 5px,
+          var(--color-forest-deep) 6px,
+          var(--color-forest) 8px,
+          var(--color-forest-deep) 10px,
+          var(--color-forest-light) 12px,
+          var(--color-forest-deep) 14px
+        );
       color: var(--color-cream);
-      border-radius: 8px;
+      border-radius: 4px;
       padding: 1rem 0.5rem;
       text-align: center;
       line-height: 1.2;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        inset 0 -1px 0 rgba(0,0,0,0.15),
+        0 2px 4px rgba(30, 63, 43, 0.2);
     }
 
     .event-date-badge .month {
@@ -83,14 +123,16 @@ import { CalendarEvent } from '../../models/event.model';
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      opacity: 0.8;
+      opacity: 0.85;
       display: block;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
     }
 
     .event-date-badge .day {
       font-family: var(--font-display);
       font-size: 1.8rem;
       display: block;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .event-details {
@@ -151,6 +193,31 @@ import { CalendarEvent } from '../../models/event.model';
     @media (max-width: 640px) {
       .event-card {
         grid-template-columns: 1fr;
+      }
+
+      .event-card::before {
+        top: -5px;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        border-radius: 2px 2px 0 0;
+        background:
+          repeating-linear-gradient(
+            90deg,
+            var(--color-bark) 0px,
+            var(--color-bark-light) 2px,
+            var(--color-bark) 3px,
+            rgba(59, 47, 37, 0.7) 5px,
+            var(--color-bark) 6px,
+            var(--color-bark-light) 8px,
+            var(--color-bark) 10px
+          );
+      }
+
+      .event-card {
+        border-left: 1px solid rgba(59, 47, 37, 0.08);
+        border-top: 5px solid var(--color-bark);
+        border-radius: 2px 2px 12px 12px;
       }
 
       .event-date-badge {

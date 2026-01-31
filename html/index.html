@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hood River AI Collective — Monthly AI Meetup in Hood River, Oregon</title>
+  <meta name="description" content="A monthly gathering for AI enthusiasts, builders, and curious minds in Hood River, Oregon. Every third Thursday.">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Hood River AI Collective home">
+        HR AI Collective
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#schedule-section">Events</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#location">Location</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container">
+        <span class="hero-badge" aria-hidden="true">Hood River, Oregon</span>
+        <h1 id="hero-heading">Hood River<br><em>AI Collective</em></h1>
+        <p class="hero-subtitle">
+          A monthly gathering for builders, thinkers, and the curious
+          exploring artificial intelligence in the Gorge.
+        </p>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <span class="hero-meta-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </span>
+            <span>3rd Thursday of each month</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <span>Hood River, Oregon</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider" aria-hidden="true">
+      <span class="section-divider-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 22h20L12 2zm0 5l6.9 13H5.1L12 7z"/></svg>
+      </span>
+    </div>
+
+    <!-- Events -->
+    <section class="events-section" id="schedule-section" aria-labelledby="events-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="events-heading">Upcoming Gatherings</h2>
+          <p>What's next on the schedule</p>
+        </div>
+
+        <div class="filter-tabs" role="group" aria-label="Filter events">
+          <button
+            class="filter-tab active"
+            aria-pressed="true"
+            hx-get="/api/events"
+            hx-target="#schedule"
+            hx-swap="innerHTML"
+          >All Events</button>
+          <button
+            class="filter-tab"
+            aria-pressed="false"
+            hx-get="/api/events/upcoming"
+            hx-target="#schedule"
+            hx-swap="innerHTML"
+          >Upcoming</button>
+          <button
+            class="filter-tab"
+            aria-pressed="false"
+            hx-get="/api/events/past"
+            hx-target="#schedule"
+            hx-swap="innerHTML"
+          >Past</button>
+        </div>
+
+        <div
+          id="schedule"
+          role="region"
+          aria-label="Event listings"
+          aria-live="polite"
+          hx-get="/api/events"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
+          <div class="events-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <p>Loading events&hellip;</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="about-section" id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2 id="about-heading">Where <em>curiosity</em> meets community</h2>
+            <p>
+              The Hood River AI Collective is a grassroots meetup for anyone
+              interested in artificial intelligence &mdash; from seasoned engineers
+              to complete beginners. We gather every third Thursday to share ideas,
+              demo projects, and learn together.
+            </p>
+            <p>
+              No corporate sponsors, no gatekeeping. Just good conversations
+              about how AI is shaping our world, right here in the Gorge.
+            </p>
+          </div>
+          <ul class="about-features" role="list">
+            <li class="about-feature">
+              <span class="about-feature-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </span>
+              <div>
+                <h3>Open to All</h3>
+                <p>Developers, designers, educators, business owners &mdash; everyone welcome regardless of experience level.</p>
+              </div>
+            </li>
+            <li class="about-feature">
+              <span class="about-feature-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </span>
+              <div>
+                <h3>Show &amp; Tell</h3>
+                <p>Bring a project, a question, or just your curiosity. We love live demos and hands-on exploration.</p>
+              </div>
+            </li>
+            <li class="about-feature">
+              <span class="about-feature-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </span>
+              <div>
+                <h3>Local &amp; Global</h3>
+                <p>Rooted in Hood River, connected to the wider world of AI research and open-source communities.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Location / CTA -->
+    <section class="location-section" id="location" aria-labelledby="location-heading">
+      <div class="container">
+        <h2 id="location-heading">Join us in <em>Hood River</em></h2>
+        <p class="location-details">
+          We meet on the third Thursday of every month in Hood River, Oregon.
+          Check the events above for specific venues and times.
+        </p>
+        <a href="#schedule-section" class="cta-button">
+          View Upcoming Events
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <span class="footer-brand">Hood River AI Collective</span>
+      <span class="footer-text">A community meetup in the Columbia River Gorge</span>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -13,7 +13,10 @@
       "Bash(git checkout:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nConvert project from HTMX to Angular 19 with Cloud Run deployment\n\nArchitecture changes:\n- Replace HTML+HTMX with Angular 19 standalone components\n- Client-side Google Calendar API integration \\(no backend needed\\)\n- Docker multi-stage build with nginx for Cloud Run deployment\n\nNew files:\n- Angular project structure \\(src/app/components, services, models\\)\n- CalendarService for Google Calendar API integration\n- Header, EventList, EventCard, Footer components\n- Docker and nginx configuration for Cloud Run\n- Environment files for API configuration\n\nUpdated documentation:\n- CLAUDE.md updated for Angular architecture\n- README.md updated with new tech stack and commands\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm install:*)",
+      "Bash(npx ng build:*)",
+      "Skill(copu)"
     ]
   }
 }

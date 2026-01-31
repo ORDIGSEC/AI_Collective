@@ -1,0 +1,114 @@
+# Hood River AI Collective
+
+> Monthly AI meetup in Hood River, Oregon, bringing together AI enthusiasts, developers, and curious community members to explore artificial intelligence, large language models, and practical AI applications.
+
+## About
+
+The Hood River AI Collective hosts monthly meetups on the third Thursday of each month at Forge, a makerspace in Hood River, Oregon. We focus on collaborative learning, hands-on demonstrations, and building a welcoming tech community in the Columbia River Gorge.
+
+## Website Information
+
+- **Live Site**: https://hoodriveraicollective.com
+- **Event Calendar**: https://calendar.google.com/calendar/embed?src=ef3e5cb398ac36f88d43f97199cbcf09b78563a0b3f314ae241b86bc6373267f
+- **Meetup Page**: https://www.meetup.com/hood-river-ai-meetup
+- **Repository**: https://github.com/ORDIGSEC/AI_Collective
+
+## Contact Information
+
+- **Organizer**: Matt Fullerton
+- **Email**: digsec.oregon@gmail.com
+- **Location**: Forge, 420 Industrial St, Hood River, Oregon 97041
+
+## Meeting Schedule
+
+- **Frequency**: Monthly on the third Thursday
+- **Format**: Collaborative learning sessions, live demos, hands-on workshops
+- **Topics**: LLMs, prompt engineering, AI applications, technical deep dives, ethics & safety
+
+## Technical Information
+
+This is a modern single-page application built with Angular 19:
+
+- **Frontend**: Angular 19 (standalone components)
+- **Styling**: SCSS with modern design system
+- **Data Source**: Google Calendar API (client-side integration)
+- **Deployment**: Google Cloud Run (containerized nginx)
+- **Architecture**: Fully client-side with no backend required
+
+Key technical features:
+- Standalone Angular components (no NgModules)
+- Direct Google Calendar API integration from browser
+- Responsive design with Hood River identity
+- Dark navy (#1a1a2e) and accent red (#e94560) color palette
+- Inter font family
+- Docker containerization with multi-stage builds
+- nginx serving optimized production build
+
+## Content Types
+
+- **Events**: Upcoming and past meetup events loaded from Google Calendar
+- **Schedule**: 2026 monthly meetup calendar with topics and dates
+- **Community**: Information about joining and participating in meetups
+
+## Project Information
+
+- **Project Type**: Open source community website
+- **Built**: January 2026 as collaborative meetup project
+- **Purpose**: Functional meetup site and demonstration of modern web development
+- **Contributors**: Hood River AI Collective members
+- **License**: Open source
+
+## Topics Covered at Meetups
+
+- **Foundational Concepts**: Intro to LLMs, prompt engineering basics
+- **Technical Deep Dives**: Fine-tuning, RAG systems, embeddings, model architecture
+- **Practical Applications**: Claude Code, AI for industry, real-world use cases
+- **Ethics & Safety**: Alignment, bias, responsible AI development
+- **Hands-On Workshops**: Prompt engineering, tool building, agent development
+- **Guest Speakers**: Industry professionals, researchers, practitioners
+- **Community Showcases**: Member projects, case studies, demos
+
+## Architecture
+
+```
+Browser (Angular App)
+    ↓
+Google Calendar API (HTTPS)
+    ↓
+Cloud Run Container
+    ├── nginx (serves static files)
+    └── Angular production build
+```
+
+- No backend service required
+- API key exposed in browser (acceptable for public calendar)
+- nginx configured for SPA routing (fallback to index.html)
+- Cloud Run scales to zero when idle
+- Multi-stage Docker build for optimized images
+
+## Development
+
+The project uses modern Angular tooling:
+
+- **Package Manager**: npm
+- **Dev Server**: Angular CLI (localhost:4200)
+- **Build Tool**: Angular CLI with production optimizations
+- **Containerization**: Docker with multi-stage builds
+- **Testing**: Karma with Jasmine
+
+## Mission
+
+Building a welcoming, educational, community-focused space for AI exploration in Hood River, Oregon. We prioritize collaborative learning, practical demonstrations, and real-world applications of AI technology while maintaining an accessible and inclusive environment for all skill levels.
+
+## Design Philosophy
+
+- Clean, modern design avoiding generic AI aesthetics
+- No purple gradients or robot illustrations
+- Distinctive Hood River tech community identity
+- Accessibility-first approach (ARIA labels, focus states, contrast ratios)
+- Mobile-responsive layout
+- Performance-optimized for fast load times
+
+---
+
+Last Updated: January 2026

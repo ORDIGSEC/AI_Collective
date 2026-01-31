@@ -2,7 +2,6 @@
 FROM node:20-alpine AS build
 
 # Set build arguments
-ARG NODE_ENV=production
 ARG BUILD_DATE
 ARG VCS_REF
 

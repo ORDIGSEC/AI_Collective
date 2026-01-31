@@ -10,13 +10,20 @@ type FilterType = 'all' | 'upcoming' | 'past';
   standalone: true,
   imports: [EventCardComponent],
   template: `
-    <section class="events-section" aria-labelledby="events-heading">
+    <section class="events-section" id="events" aria-labelledby="events-heading">
       <div class="section-header">
-        <h2 id="events-heading">Meetup Events</h2>
-        <p class="section-description">Join us on the 3rd Thursday of each month</p>
+        <h2 id="events-heading">Upcoming Gatherings</h2>
+        <p class="section-description">What's next on the schedule</p>
       </div>
 
-      <div class="filter-buttons" role="tablist" aria-label="Event filters">
+      <div class="filter-tabs" role="tablist" aria-label="Event filters">
+        <button
+          role="tab"
+          [attr.aria-selected]="activeFilter() === 'all'"
+          [class.active]="activeFilter() === 'all'"
+          (click)="filterEvents('all')">
+          All Events
+        </button>
         <button
           role="tab"
           [attr.aria-selected]="activeFilter() === 'upcoming'"
@@ -30,13 +37,6 @@ type FilterType = 'all' | 'upcoming' | 'past';
           [class.active]="activeFilter() === 'past'"
           (click)="filterEvents('past')">
           Past
-        </button>
-        <button
-          role="tab"
-          [attr.aria-selected]="activeFilter() === 'all'"
-          [class.active]="activeFilter() === 'all'"
-          (click)="filterEvents('all')">
-          All Events
         </button>
       </div>
 
@@ -52,6 +52,7 @@ type FilterType = 'all' | 'upcoming' | 'past';
         </div>
       } @else if (events().length === 0) {
         <div class="empty-state">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           <p>No {{ activeFilter() === 'all' ? '' : activeFilter() }} events found.</p>
         </div>
       } @else {
@@ -69,55 +70,59 @@ type FilterType = 'all' | 'upcoming' | 'past';
     }
 
     .section-header {
-      margin-bottom: 2rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
     }
 
     .section-header h2 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #1a1a2e;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--color-bark);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
     }
 
     .section-description {
-      margin: 0;
-      color: #4a5568;
-      font-size: 1rem;
+      color: var(--color-stone);
+      font-size: 1.05rem;
     }
 
-    .filter-buttons {
+    .filter-tabs {
       display: flex;
+      justify-content: center;
       gap: 0.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
       flex-wrap: wrap;
     }
 
-    .filter-buttons button {
-      padding: 0.625rem 1.25rem;
+    .filter-tabs button {
+      font-family: var(--font-body);
       font-size: 0.875rem;
       font-weight: 500;
-      border: 1px solid #e2e8f0;
-      border-radius: 9999px;
-      background: #fff;
-      color: #4a5568;
+      letter-spacing: 0.01em;
+      padding: 0.6em 1.5em;
+      border: 1.5px solid var(--color-cream-dark);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--color-bark-light);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all var(--transition-base);
     }
 
-    .filter-buttons button:hover {
-      border-color: #cbd5e0;
-      background: #f7fafc;
+    .filter-tabs button:hover {
+      border-color: var(--color-forest-light);
+      color: var(--color-forest);
+      background: rgba(45, 90, 61, 0.04);
     }
 
-    .filter-buttons button.active {
-      background: #1a1a2e;
-      border-color: #1a1a2e;
-      color: #fff;
-    }
-
-    .filter-buttons button:focus-visible {
-      outline: 2px solid #e94560;
+    .filter-tabs button:focus-visible {
+      outline: 2px solid var(--color-amber);
       outline-offset: 2px;
+    }
+
+    .filter-tabs button.active {
+      background: var(--color-forest);
+      border-color: var(--color-forest);
+      color: var(--color-cream);
     }
 
     .events-grid {
@@ -132,56 +137,68 @@ type FilterType = 'all' | 'upcoming' | 'past';
       align-items: center;
       justify-content: center;
       padding: 4rem 2rem;
-      color: #4a5568;
+      color: var(--color-stone);
     }
 
     .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #e2e8f0;
-      border-top-color: #e94560;
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--color-cream-dark);
+      border-top-color: var(--color-forest);
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.7s linear infinite;
       margin-bottom: 1rem;
     }
 
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
     .error {
       text-align: center;
       padding: 3rem 2rem;
-      background: #fff5f5;
-      border: 1px solid #feb2b2;
-      border-radius: 12px;
-      color: #c53030;
+      background: white;
+      border: 1px solid rgba(59, 47, 37, 0.1);
+      border-radius: 16px;
+      color: var(--color-bark-light);
     }
 
     .retry-btn {
       margin-top: 1rem;
-      padding: 0.5rem 1.5rem;
-      background: #c53030;
-      color: #fff;
+      padding: 0.6em 1.5em;
+      background: var(--color-forest);
+      color: var(--color-cream);
       border: none;
-      border-radius: 6px;
+      border-radius: 100px;
       font-weight: 500;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: background var(--transition-base);
     }
 
     .retry-btn:hover {
-      background: #9b2c2c;
+      background: var(--color-forest-deep);
     }
 
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
-      color: #718096;
-      background: #f7fafc;
-      border-radius: 12px;
+      color: var(--color-stone);
+    }
+
+    .empty-state svg {
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+
+    @media (max-width: 480px) {
+      .filter-tabs {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-tabs button {
+        text-align: center;
+      }
     }
   `]
 })

@@ -8,24 +8,23 @@ import { CalendarEvent } from '../../models/event.model';
   imports: [DatePipe],
   template: `
     <article class="event-card" [class.past]="isPast">
-      <div class="event-date">
+      <div class="event-date-badge">
         <span class="month">{{ event.start | date:'MMM' }}</span>
         <span class="day">{{ event.start | date:'d' }}</span>
-        <span class="year">{{ event.start | date:'yyyy' }}</span>
       </div>
       <div class="event-details">
         <h3 class="event-title">{{ event.title }}</h3>
         <div class="event-meta">
           <span class="event-time">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            {{ event.start | date:'shortTime' }} - {{ event.end | date:'shortTime' }}
+            {{ event.start | date:'shortTime' }} – {{ event.end | date:'shortTime' }}
           </span>
           @if (event.location) {
             <span class="event-location">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
@@ -38,7 +37,7 @@ import { CalendarEvent } from '../../models/event.model';
         }
         <a [href]="event.htmlLink" target="_blank" rel="noopener noreferrer" class="event-link">
           View in Calendar
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
             <polyline points="15 3 21 3 21 9"></polyline>
             <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -49,67 +48,59 @@ import { CalendarEvent } from '../../models/event.model';
   `,
   styles: [`
     .event-card {
-      display: flex;
+      display: grid;
+      grid-template-columns: 80px 1fr;
       gap: 1.5rem;
-      padding: 1.5rem;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      border: 1px solid #e2e8f0;
-      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      padding: 2rem;
+      background: white;
+      border: 1px solid rgba(59, 47, 37, 0.06);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow var(--transition-base), transform var(--transition-base);
+      align-items: start;
     }
 
     .event-card:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-card-hover);
       transform: translateY(-2px);
     }
 
     .event-card.past {
-      opacity: 0.7;
+      opacity: 0.65;
     }
 
-    .event-date {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-width: 70px;
-      padding: 0.75rem;
-      background: #f7fafc;
+    .event-date-badge {
+      background: var(--color-forest);
+      color: var(--color-cream);
       border-radius: 8px;
+      padding: 1rem 0.5rem;
       text-align: center;
+      line-height: 1.2;
     }
 
-    .event-date .month {
-      font-size: 0.75rem;
+    .event-date-badge .month {
+      font-size: 0.7rem;
       font-weight: 600;
       text-transform: uppercase;
-      color: #e94560;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+      display: block;
     }
 
-    .event-date .day {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #1a1a2e;
-      line-height: 1.1;
-    }
-
-    .event-date .year {
-      font-size: 0.75rem;
-      color: #718096;
+    .event-date-badge .day {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      display: block;
     }
 
     .event-details {
-      flex: 1;
       min-width: 0;
     }
 
     .event-title {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1a1a2e;
+      font-size: 1.3rem;
+      margin-bottom: 0.3em;
+      color: var(--color-bark);
     }
 
     .event-meta {
@@ -117,8 +108,8 @@ import { CalendarEvent } from '../../models/event.model';
       flex-wrap: wrap;
       gap: 1rem;
       margin-bottom: 0.75rem;
-      font-size: 0.875rem;
-      color: #4a5568;
+      font-size: 0.85rem;
+      color: var(--color-stone);
     }
 
     .event-meta span {
@@ -128,14 +119,14 @@ import { CalendarEvent } from '../../models/event.model';
     }
 
     .event-meta svg {
-      color: #718096;
+      color: var(--color-stone-light);
     }
 
     .event-description {
-      margin: 0 0 1rem 0;
-      font-size: 0.9375rem;
-      color: #4a5568;
+      font-size: 0.95rem;
+      color: var(--color-bark-light);
       line-height: 1.6;
+      margin-bottom: 1rem;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
@@ -148,30 +139,30 @@ import { CalendarEvent } from '../../models/event.model';
       gap: 0.375rem;
       font-size: 0.875rem;
       font-weight: 500;
-      color: #e94560;
+      color: var(--color-forest);
       text-decoration: none;
-      transition: color 0.2s ease;
+      transition: color var(--transition-base);
     }
 
     .event-link:hover {
-      color: #d13652;
+      color: var(--color-amber);
     }
 
     @media (max-width: 640px) {
       .event-card {
-        flex-direction: column;
-        gap: 1rem;
+        grid-template-columns: 1fr;
       }
 
-      .event-date {
-        flex-direction: row;
-        gap: 0.5rem;
-        justify-content: flex-start;
-        padding: 0.5rem 0.75rem;
+      .event-date-badge {
+        display: flex;
+        gap: 0.4em;
+        align-items: baseline;
+        width: fit-content;
+        padding: 0.4em 0.8em;
       }
 
-      .event-date .day {
-        font-size: 1.25rem;
+      .event-date-badge .day {
+        font-size: 1.2rem;
       }
     }
   `]

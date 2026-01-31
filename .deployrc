@@ -1,0 +1,49 @@
+# Quick Reference - Hood River AI Collective Deployment
+# Source this file for helpful aliases: source .deployrc
+
+# Deployment aliases
+alias deploy='./deploy.sh'
+alias deploy-logs='tail -f deploy.log'
+
+# Docker aliases
+alias dc='docker compose'
+alias dc-up='docker compose up -d'
+alias dc-down='docker compose down'
+alias dc-restart='docker compose restart'
+alias dc-logs='docker compose logs -f'
+alias dc-ps='docker compose ps'
+alias dc-build='docker compose build --no-cache'
+
+# Container access
+alias app-shell='docker compose exec app sh'
+alias app-logs='docker compose logs -f app'
+
+# Health checks
+alias check-health='curl -s http://localhost:8080/health && echo " ✓ Healthy"'
+alias check-site='curl -s http://localhost:8080 | head -20'
+
+# Cloudflare Tunnel
+alias tunnel-status='sudo systemctl status cloudflared'
+alias tunnel-restart='sudo systemctl restart cloudflared'
+alias tunnel-logs='sudo journalctl -u cloudflared -f'
+alias tunnel-info='cloudflared tunnel info hr-ai-sites'
+
+# Git operations
+alias git-status='git status'
+alias git-pull='git pull'
+alias git-log='git log --oneline -10'
+
+# Monitoring
+alias watch-logs='watch -n 2 "docker compose logs --tail=20"'
+alias watch-health='watch -n 5 "curl -s http://localhost:8080/health"'
+
+# Cleanup
+alias docker-clean='docker system prune -a'
+alias docker-usage='docker system df'
+
+echo "Deployment aliases loaded!"
+echo "  deploy          - Run deployment script"
+echo "  dc-logs         - View container logs"
+echo "  check-health    - Test health endpoint"
+echo "  tunnel-status   - Check Cloudflare Tunnel"
+echo "  Type 'alias' to see all available commands"

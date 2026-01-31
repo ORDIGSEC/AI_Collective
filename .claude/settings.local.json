@@ -8,7 +8,9 @@
       "Bash(ss:*)",
       "Bash(curl:*)",
       "Bash(host:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:prod:*)"
     ]
   }
 }

@@ -14,13 +14,13 @@ Single-page website showcasing upcoming and past AI meetup events. Built with **
 - Filter events by upcoming/past/all
 - Modern Angular standalone components
 - Docker containerized with nginx
-- Deployed on Google Cloud Run
+- Deployed via Cloudflare Tunnel
 
 ### Tech Stack
 
 - **Frontend:** Angular 19 (standalone components, signals)
 - **Styling:** SCSS with custom design system
-- **Infrastructure:** Docker, nginx, Google Cloud Run
+- **Infrastructure:** Docker, nginx, Cloudflare Tunnel
 - **Data Source:** Google Calendar Public API (client-side)
 
 ## Quick Start
@@ -85,7 +85,7 @@ Browser (Angular)
     ↓
 Google Calendar API (direct HTTPS call)
     ↓
-Cloud Run (nginx serving static Angular build)
+Cloudflare Tunnel → localhost:8080 (Docker + nginx)
 ```
 
 **Key Points:**
@@ -93,6 +93,7 @@ Cloud Run (nginx serving static Angular build)
 - No backend required - Angular fetches events directly from Google Calendar API
 - API key is exposed in browser (acceptable for public calendar with rate limiting)
 - nginx serves static files with SPA routing
+- Local deployment via Docker and Cloudflare Tunnel
 
 ## Project Structure
 
@@ -117,24 +118,20 @@ src/
 
 ## Deployment
 
-### Google Cloud Run
+The site is deployed locally using Docker and exposed via Cloudflare Tunnel.
 
 ```bash
-# Build and push to Artifact Registry
-gcloud builds submit --tag gcr.io/PROJECT_ID/ai-collective
-
-# Deploy to Cloud Run
-gcloud run deploy ai-collective \
-  --image gcr.io/PROJECT_ID/ai-collective \
-  --platform managed \
-  --region us-west1 \
-  --allow-unauthenticated \
-  --port 8080
+# Deploy using the deployment script
+./deploy.sh
 ```
+
+For detailed deployment instructions, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
 
 ## Documentation
 
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide for Cloudflare Tunnel setup
 - **[CLAUDE.md](CLAUDE.md)** - Instructions for Claude Code when working on this repo
+- **[docs/development.md](docs/development.md)** - Angular development guide
 
 ## Contributing
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-page website for a monthly AI Meetup in Hood River, Oregon. Built with Angular 19 (standalone components). Events are loaded dynamically from Google Calendar API (client-side). Deployed on Google Cloud Run.
+Single-page website for a monthly AI Meetup in Hood River, Oregon. Built with Angular 19 (standalone components). Events are loaded dynamically from Google Calendar API (client-side). Deployed locally via Docker and Cloudflare Tunnel.
 
 **Live URL:** <https://hoodriveraicollective.com>
 
@@ -39,6 +39,9 @@ docker run -p 8080:8080 ai-collective
 docker compose up -d
 docker compose down
 docker compose logs -f
+
+# Deploy to production
+./deploy.sh
 ```
 
 ## Project Structure
@@ -64,7 +67,7 @@ AI_Collective/
 │   ├── index.html
 │   ├── main.ts
 │   └── styles.scss                    # Global styles
-├── Dockerfile                          # Multi-stage build for Cloud Run
+├── Dockerfile                          # Multi-stage build for production
 ├── nginx.conf                          # nginx config for SPA routing
 ├── docker-compose.yml                  # Local Docker orchestration
 ├── angular.json                        # Angular CLI configuration
@@ -77,7 +80,7 @@ AI_Collective/
 ```
 Browser (Angular) → Google Calendar API (direct HTTPS)
         ↓
-   Cloud Run (containerized nginx serving Angular build)
+   Cloudflare Tunnel → localhost:8080 (Docker + nginx)
 ```
 
 **Key Points:**
@@ -85,7 +88,7 @@ Browser (Angular) → Google Calendar API (direct HTTPS)
 - No backend service - Angular calls Google Calendar API directly
 - API key is exposed in browser (acceptable for public calendar)
 - nginx serves static files with SPA routing (fallback to index.html)
-- Cloud Run scales to zero when idle
+- Deployed locally via Docker, exposed through Cloudflare Tunnel
 
 ## Configuration
 
@@ -104,19 +107,18 @@ export const environment = {
 };
 ```
 
-## Cloud Run Deployment
+## Deployment
+
+The site is deployed locally using Docker and exposed via Cloudflare Tunnel. See **DEPLOYMENT.md** for complete setup instructions.
 
 ```bash
-# Build and push to Artifact Registry
-gcloud builds submit --tag gcr.io/PROJECT_ID/ai-collective
+# Deploy using the deployment script
+./deploy.sh
 
-# Deploy to Cloud Run
-gcloud run deploy ai-collective \
-  --image gcr.io/PROJECT_ID/ai-collective \
-  --platform managed \
-  --region us-west1 \
-  --allow-unauthenticated \
-  --port 8080
+# The script handles:
+# - Building the Docker image
+# - Starting the container via docker compose
+# - Verifying the deployment
 ```
 
 ## Design Guidelines
@@ -135,5 +137,5 @@ If you need server-side functionality:
 1. Create `backend/` directory with Node/Python/Go service
 2. Add service to `docker-compose.yml` on internal network
 3. Update nginx.conf to proxy `/api/*` to backend
-4. Deploy as separate Cloud Run service
+4. Update deployment to include backend container
 5. Update Angular to call backend instead of Calendar API directly

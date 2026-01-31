@@ -1,15 +1,11 @@
 services:
   app:
-    # Use pre-built image from GitHub Container Registry
-    # To build locally instead, uncomment 'build: .' and comment out 'image:'
-    image: ghcr.io/ordigsec/ai_collective:latest
-    # build: .
-    pull_policy: always
+    build: .
     ports:
       - "8080:8080"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 3

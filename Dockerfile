@@ -56,7 +56,7 @@ RUN mkdir -p /var/cache/nginx /var/log/nginx && \
     chown -R nginx:nginx /var/cache/nginx /var/log/nginx && \
     chmod -R 755 /var/cache/nginx /var/log/nginx
 
-# Expose port 8080 (Cloud Run and Cloudflare Tunnel compatible)
+# Expose port 8080 (Cloudflare Tunnel deployment)
 EXPOSE 8080
 
 # Add health check

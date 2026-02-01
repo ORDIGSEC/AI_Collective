@@ -222,3 +222,10 @@ bazel-out/
 .DS_Store
 Thumbs.db
 .claude/
+
+# Development/debugging files
+screenshot*.png
+contours.svg
+
+# Old/unused components
+src/app/components/shared/

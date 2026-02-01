@@ -1,9 +1,6 @@
 services:
   app:
-    # Use pre-built image from GitHub Container Registry
-    # To build locally instead, uncomment 'build: .' and comment out 'image:'
-    image: ghcr.io/ordigsec/ai_collective:latest
-    # build: .
+    image: ${IMAGE:-ghcr.io/ordigsec/ai_collective:latest}
     pull_policy: always
     ports:
       - "8080:8080"
@@ -14,3 +11,19 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOME}/.docker/config.json:/config.json:ro
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=180
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_ROLLING_RESTART=true
+      - DOCKER_CONFIG=/
+    command: --interval 180

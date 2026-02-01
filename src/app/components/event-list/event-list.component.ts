@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
-import { CalendarEvent } from '../../models/event.model';
+import { ExtendedEvent } from '../../models/event.model';
 import { EventCardComponent } from '../event-card/event-card.component';
 
 type FilterType = 'all' | 'upcoming' | 'past';
@@ -57,8 +57,8 @@ type FilterType = 'all' | 'upcoming' | 'past';
         </div>
       } @else {
         <div class="events-grid" role="tabpanel">
-          @for (event of events(); track event.id) {
-            <app-event-card [event]="event" />
+          @for (event of events(); track event.id; let i = $index) {
+            <app-event-card [event]="event" [autoExpand]="i === 0 && activeFilter() === 'upcoming'" />
           }
         </div>
       }
@@ -76,13 +76,13 @@ type FilterType = 'all' | 'upcoming' | 'past';
 
     .section-header h2 {
       font-size: clamp(2rem, 4vw, 3rem);
-      color: var(--color-bark);
+      color: var(--color-light-text);
       letter-spacing: -0.02em;
       margin-bottom: 0.5rem;
     }
 
     .section-description {
-      color: var(--color-stone);
+      color: var(--color-light-text-muted);
       font-size: 1.05rem;
     }
 
@@ -100,29 +100,29 @@ type FilterType = 'all' | 'upcoming' | 'past';
       font-weight: 500;
       letter-spacing: 0.01em;
       padding: 0.6em 1.5em;
-      border: 1.5px solid var(--color-cream-dark);
+      border: 1.5px solid rgba(74, 74, 74, 0.2);
       border-radius: 100px;
-      background: transparent;
-      color: var(--color-bark-light);
+      background: rgba(255, 255, 255, 0.6);
+      color: var(--color-light-text-muted);
       cursor: pointer;
       transition: all var(--transition-base);
     }
 
     .filter-tabs button:hover {
-      border-color: var(--color-forest-light);
-      color: var(--color-forest);
-      background: rgba(45, 90, 61, 0.04);
+      border-color: var(--color-ember);
+      color: var(--color-light-text);
+      background: rgba(255, 255, 255, 0.9);
     }
 
     .filter-tabs button:focus-visible {
-      outline: 2px solid var(--color-amber);
+      outline: 2px solid var(--color-ember);
       outline-offset: 2px;
     }
 
     .filter-tabs button.active {
-      background: var(--color-forest);
-      border-color: var(--color-forest);
-      color: var(--color-cream);
+      background: var(--color-ember);
+      border-color: var(--color-ember);
+      color: white;
     }
 
     .events-grid {
@@ -137,14 +137,14 @@ type FilterType = 'all' | 'upcoming' | 'past';
       align-items: center;
       justify-content: center;
       padding: 4rem 2rem;
-      color: var(--color-stone);
+      color: var(--color-light-text-muted);
     }
 
     .loading-spinner {
       width: 32px;
       height: 32px;
-      border: 3px solid var(--color-cream-dark);
-      border-top-color: var(--color-forest);
+      border: 3px solid var(--color-light-bg);
+      border-top-color: var(--color-ember);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
       margin-bottom: 1rem;
@@ -157,17 +157,17 @@ type FilterType = 'all' | 'upcoming' | 'past';
     .error {
       text-align: center;
       padding: 3rem 2rem;
-      background: white;
-      border: 1px solid rgba(59, 47, 37, 0.1);
-      border-radius: 16px;
-      color: var(--color-bark-light);
+      background: var(--color-rust);
+      border: 1px solid var(--color-clay);
+      border-radius: var(--radius-lg);
+      color: var(--color-cream);
     }
 
     .retry-btn {
       margin-top: 1rem;
       padding: 0.6em 1.5em;
-      background: var(--color-forest);
-      color: var(--color-cream);
+      background: var(--color-cream);
+      color: var(--color-rust);
       border: none;
       border-radius: 100px;
       font-weight: 500;
@@ -176,18 +176,19 @@ type FilterType = 'all' | 'upcoming' | 'past';
     }
 
     .retry-btn:hover {
-      background: var(--color-forest-deep);
+      background: var(--color-sand);
     }
 
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
-      color: var(--color-stone);
+      color: var(--color-light-text-muted);
     }
 
     .empty-state svg {
       margin-bottom: 1rem;
       opacity: 0.4;
+      color: var(--color-light-text-muted);
     }
 
     @media (max-width: 480px) {
@@ -205,7 +206,7 @@ type FilterType = 'all' | 'upcoming' | 'past';
 export class EventListComponent {
   private calendarService = inject(CalendarService);
 
-  events = signal<CalendarEvent[]>([]);
+  events = signal<ExtendedEvent[]>([]);
   loading = signal(true);
   error = signal(false);
   activeFilter = signal<FilterType>('upcoming');

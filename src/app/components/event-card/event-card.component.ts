@@ -1,19 +1,39 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { CalendarEvent } from '../../models/event.model';
+import { ExtendedEvent } from '../../models/event.model';
+import { EventCardExpandedComponent } from '../event-card-expanded/event-card-expanded.component';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, EventCardExpandedComponent],
   template: `
-    <article class="event-card" [class.past]="isPast">
+    <article class="event-card" [class.past]="isPast" [class.expanded]="expanded()"
+             [class.expandable]="event.hasExtendedData"
+             (click)="event.hasExtendedData && toggleExpand()"
+             [attr.role]="event.hasExtendedData ? 'button' : null"
+             [attr.aria-expanded]="event.hasExtendedData ? expanded() : null"
+             [tabindex]="event.hasExtendedData ? 0 : null"
+             (keydown.enter)="event.hasExtendedData && toggleExpand()"
+             (keydown.space)="event.hasExtendedData && $event.preventDefault(); event.hasExtendedData && toggleExpand()">
       <div class="event-date-badge">
         <span class="month">{{ event.start | date:'MMM' }}</span>
         <span class="day">{{ event.start | date:'d' }}</span>
       </div>
       <div class="event-details">
-        <h3 class="event-title">{{ event.title }}</h3>
+        <div class="event-header">
+          <h3 class="event-title">{{ event.title }}</h3>
+          @if (event.hasExtendedData) {
+            <button class="expand-btn" [attr.aria-label]="expanded() ? 'Collapse details' : 'Expand details'"
+                    (click)="$event.stopPropagation(); toggleExpand()" tabindex="-1">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                   [style.transform]="expanded() ? 'rotate(180deg)' : 'rotate(0deg)'">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          }
+        </div>
         <div class="event-meta">
           <span class="event-time">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -35,14 +55,26 @@ import { CalendarEvent } from '../../models/event.model';
         @if (event.description) {
           <p class="event-description">{{ event.description }}</p>
         }
-        <a [href]="event.htmlLink" target="_blank" rel="noopener noreferrer" class="event-link">
-          View in Calendar
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
+        <div class="event-actions">
+          <a [href]="event.htmlLink" target="_blank" rel="noopener noreferrer" class="event-link"
+             (click)="$event.stopPropagation()">
+            View in Calendar
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+          @if (event.hasExtendedData) {
+            <span class="expandable-badge">+ More Details</span>
+          }
+        </div>
+
+        @if (expanded() && event.extendedData) {
+          <div class="expanded-content">
+            <app-event-card-expanded [data]="event.extendedData" />
+          </div>
+        }
       </div>
     </article>
   `,
@@ -52,41 +84,25 @@ import { CalendarEvent } from '../../models/event.model';
       grid-template-columns: 80px 1fr;
       gap: 1.5rem;
       padding: 2rem;
-      background: white;
-      border: 1px solid rgba(59, 47, 37, 0.08);
-      border-left: 5px solid var(--color-bark);
-      border-radius: 2px 12px 12px 2px;
-      box-shadow: var(--shadow-card);
-      transition: box-shadow var(--transition-base), transform var(--transition-base);
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(74, 74, 74, 0.15);
+      border-left: 1px solid rgba(74, 74, 74, 0.15);
+      border-radius: var(--radius-md);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all var(--transition-base);
       align-items: start;
       position: relative;
-    }
-
-    /* Wood grain texture on left border */
-    .event-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -5px;
-      width: 5px;
-      height: 100%;
-      border-radius: 2px 0 0 2px;
-      background:
-        repeating-linear-gradient(
-          180deg,
-          var(--color-bark) 0px,
-          var(--color-bark-light) 2px,
-          var(--color-bark) 3px,
-          rgba(59, 47, 37, 0.7) 5px,
-          var(--color-bark) 6px,
-          var(--color-bark-light) 8px,
-          var(--color-bark) 10px
-        );
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
 
     .event-card:hover {
-      box-shadow: var(--shadow-card-hover);
+      box-shadow: 0 8px 24px rgba(255, 87, 34, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
       transform: translateY(-2px);
+      border-color: rgba(255, 87, 34, 0.3);
+      border-left-color: var(--color-ember);
+      border-left-width: 4px;
+      padding-left: calc(2rem - 3px);
     }
 
     .event-card.past {
@@ -94,28 +110,13 @@ import { CalendarEvent } from '../../models/event.model';
     }
 
     .event-date-badge {
-      background:
-        repeating-linear-gradient(
-          180deg,
-          var(--color-forest-deep) 0px,
-          var(--color-forest) 2px,
-          var(--color-forest-deep) 3px,
-          var(--color-forest-light) 5px,
-          var(--color-forest-deep) 6px,
-          var(--color-forest) 8px,
-          var(--color-forest-deep) 10px,
-          var(--color-forest-light) 12px,
-          var(--color-forest-deep) 14px
-        );
-      color: var(--color-cream);
-      border-radius: 4px;
+      background: var(--color-ember);
+      color: white;
+      border-radius: var(--radius-tight);
       padding: 1rem 0.5rem;
       text-align: center;
       line-height: 1.2;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.12),
-        inset 0 -1px 0 rgba(0,0,0,0.15),
-        0 2px 4px rgba(30, 63, 43, 0.2);
+      box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
     }
 
     .event-date-badge .month {
@@ -125,14 +126,12 @@ import { CalendarEvent } from '../../models/event.model';
       letter-spacing: 0.1em;
       opacity: 0.85;
       display: block;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
     }
 
     .event-date-badge .day {
       font-family: var(--font-display);
       font-size: 1.8rem;
       display: block;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .event-details {
@@ -142,7 +141,7 @@ import { CalendarEvent } from '../../models/event.model';
     .event-title {
       font-size: 1.3rem;
       margin-bottom: 0.3em;
-      color: var(--color-bark);
+      color: var(--color-light-text);
     }
 
     .event-meta {
@@ -151,7 +150,7 @@ import { CalendarEvent } from '../../models/event.model';
       gap: 1rem;
       margin-bottom: 0.75rem;
       font-size: 0.85rem;
-      color: var(--color-stone);
+      color: var(--color-light-text-muted);
     }
 
     .event-meta span {
@@ -161,12 +160,12 @@ import { CalendarEvent } from '../../models/event.model';
     }
 
     .event-meta svg {
-      color: var(--color-stone-light);
+      color: var(--color-light-text-muted);
     }
 
     .event-description {
       font-size: 0.95rem;
-      color: var(--color-bark-light);
+      color: var(--color-light-text-muted);
       line-height: 1.6;
       margin-bottom: 1rem;
       display: -webkit-box;
@@ -181,43 +180,93 @@ import { CalendarEvent } from '../../models/event.model';
       gap: 0.375rem;
       font-size: 0.875rem;
       font-weight: 500;
-      color: var(--color-forest);
+      color: var(--color-ember);
       text-decoration: none;
       transition: color var(--transition-base);
     }
 
     .event-link:hover {
-      color: var(--color-amber);
+      color: var(--color-rust);
+    }
+
+    /* Expandable card styles */
+    .event-card.expandable {
+      cursor: pointer;
+    }
+
+    .event-card.expandable:hover {
+      box-shadow: var(--shadow-ember-strong);
+      transform: translateY(-4px);
+    }
+
+    .event-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.3em;
+    }
+
+    .expand-btn {
+      background: none;
+      border: none;
+      padding: 0.25rem;
+      color: var(--color-ember);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      border-radius: var(--radius-tight);
+      flex-shrink: 0;
+    }
+
+    .expand-btn:hover {
+      background: rgba(255, 87, 34, 0.1);
+    }
+
+    .expand-btn svg {
+      transition: transform var(--transition-spring);
+      display: block;
+    }
+
+    .event-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .expandable-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--color-ember);
+      background: rgba(255, 87, 34, 0.1);
+      border: 1px solid rgba(255, 87, 34, 0.2);
+      padding: 0.35em 0.8em;
+      border-radius: 100px;
+      letter-spacing: 0.02em;
+    }
+
+    .expanded-content {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(74, 74, 74, 0.15);
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @media (max-width: 640px) {
       .event-card {
         grid-template-columns: 1fr;
-      }
-
-      .event-card::before {
-        top: -5px;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        border-radius: 2px 2px 0 0;
-        background:
-          repeating-linear-gradient(
-            90deg,
-            var(--color-bark) 0px,
-            var(--color-bark-light) 2px,
-            var(--color-bark) 3px,
-            rgba(59, 47, 37, 0.7) 5px,
-            var(--color-bark) 6px,
-            var(--color-bark-light) 8px,
-            var(--color-bark) 10px
-          );
-      }
-
-      .event-card {
-        border-left: 1px solid rgba(59, 47, 37, 0.08);
-        border-top: 5px solid var(--color-bark);
-        border-radius: 2px 2px 12px 12px;
       }
 
       .event-date-badge {
@@ -234,10 +283,22 @@ import { CalendarEvent } from '../../models/event.model';
     }
   `]
 })
-export class EventCardComponent {
-  @Input({ required: true }) event!: CalendarEvent;
+export class EventCardComponent implements OnInit {
+  @Input({ required: true }) event!: ExtendedEvent;
+  @Input() autoExpand = false;
+  expanded = signal(false);
+
+  ngOnInit(): void {
+    if (this.autoExpand && this.event.hasExtendedData) {
+      this.expanded.set(true);
+    }
+  }
 
   get isPast(): boolean {
     return this.event.end < new Date();
+  }
+
+  toggleExpand(): void {
+    this.expanded.update(v => !v);
   }
 }

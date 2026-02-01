@@ -5,98 +5,119 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `
     <footer class="site-footer" role="contentinfo">
-      <!-- Topo accent in footer -->
-      <svg class="footer-topo" aria-hidden="true" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice">
-        <g fill="none" stroke="currentColor" stroke-linecap="round">
-          <path d="M0,80 Q200,50 400,80 T800,70" stroke-width="1.2" opacity="0.08"/>
-          <path d="M0,90 Q200,60 400,90 T800,80" stroke-width="1" opacity="0.06"/>
-          <path d="M0,100 Q200,70 400,100 T800,90" stroke-width="1.2" opacity="0.08"/>
-          <path d="M0,110 Q200,80 400,110 T800,100" stroke-width="1" opacity="0.06"/>
-          <path d="M0,120 Q200,90 400,120 T800,110" stroke-width="1.2" opacity="0.08"/>
-          <path d="M0,130 Q200,100 400,130 T800,120" stroke-width="1" opacity="0.06"/>
-          <path d="M0,140 Q200,110 400,140 T800,130" stroke-width="0.8" opacity="0.05"/>
-          <ellipse cx="600" cy="110" rx="100" ry="50" stroke-width="1" opacity="0.06"/>
-          <ellipse cx="600" cy="110" rx="60" ry="30" stroke-width="1.2" opacity="0.08"/>
-          <ellipse cx="600" cy="110" rx="25" ry="12" stroke-width="1.5" opacity="0.1"/>
-        </g>
-      </svg>
       <div class="footer-inner">
-        <span class="footer-brand">Hood River AI Collective</span>
-        <span class="footer-text">A community meetup in the Columbia River Gorge</span>
+        <div class="footer-brand">
+          <span class="brand-text">Hood River AI Collective</span>
+          <span class="footer-tagline">Building the future in the Gorge</span>
+        </div>
+        <div class="footer-links">
+          <a href="mailto:contact@hoodriveraicollective.com" aria-label="Email us">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </a>
+          <a href="https://github.com/hood-river-ai" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-credit">
+        <span>© {{ currentYear }} Hood River AI Collective</span>
       </div>
     </footer>
   `,
   styles: [`
     .site-footer {
-      padding: 2.5rem 0;
-      border-top: 1px solid rgba(59, 47, 37, 0.08);
-      text-align: center;
+      padding: 3rem 0 2rem;
+      background: var(--color-midnight);
+      color: var(--color-sand);
+      border-top: 1px solid var(--contour-medium);
       position: relative;
-      overflow: hidden;
-    }
-
-    /* Bold wood grain top border */
-    .site-footer::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          var(--color-bark) 0px,
-          var(--color-bark-light) 1px,
-          var(--color-bark) 3px,
-          rgba(92, 74, 58, 0.3) 4px,
-          var(--color-bark) 5px,
-          transparent 5px,
-          transparent 8px
-        );
-      opacity: 0.3;
-    }
-
-    .footer-topo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      color: var(--color-bark);
-      pointer-events: none;
     }
 
     .footer-inner {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      position: relative;
-      z-index: 1;
+      max-width: var(--max-width);
+      margin: 0 auto 2rem;
+      padding: 0 var(--gutter);
     }
 
     .footer-brand {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      color: var(--color-bark);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
-    .footer-text {
-      font-size: 0.85rem;
+    .brand-text {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-cream);
+    }
+
+    .footer-tagline {
+      font-size: 0.875rem;
       color: var(--color-stone);
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .footer-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 87, 34, 0.1);
+      border: 1px solid rgba(255, 87, 34, 0.2);
+      color: var(--color-ember);
+      transition: all var(--transition-spring);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      background: var(--color-ember);
+      color: var(--color-cream);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: var(--shadow-ember-glow);
+    }
+
+    .footer-credit {
+      text-align: center;
+      padding: 1.5rem var(--gutter) 0;
+      border-top: 1px solid var(--contour-light);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      font-size: 0.8rem;
+      color: var(--color-stone);
+      font-family: var(--font-mono);
     }
 
     @media (max-width: 640px) {
       .footer-inner {
         flex-direction: column;
+        gap: 2rem;
         text-align: center;
+      }
+
+      .footer-brand {
+        align-items: center;
       }
     }
   `]
 })
-export class FooterComponent {}
+export class FooterComponent {
+  currentYear = new Date().getFullYear();
+}

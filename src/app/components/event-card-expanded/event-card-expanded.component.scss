@@ -1,0 +1,257 @@
+.expanded-data {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-light-text);
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-ember);
+  width: fit-content;
+}
+
+/* Speakers */
+.speakers-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.speaker-card {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(74, 74, 74, 0.1);
+}
+
+.speaker-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 87, 34, 0.2);
+}
+
+.speaker-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.speaker-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.speaker-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-light-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.speaker-bio {
+  font-size: 0.9rem;
+  color: var(--color-light-text-muted);
+  line-height: 1.5;
+  margin: 0 0 0.75rem 0;
+}
+
+.speaker-social {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.speaker-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 87, 34, 0.1);
+  color: var(--color-ember);
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.speaker-social a:hover {
+  background: var(--color-ember);
+  color: var(--color-cream);
+  transform: translateY(-2px);
+}
+
+/* Agenda */
+.agenda-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.agenda-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.agenda-item::before {
+  content: '';
+  position: absolute;
+  left: 50px;
+  top: 30px;
+  bottom: -15px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--color-ember), transparent);
+}
+
+.agenda-item:last-child::before {
+  display: none;
+}
+
+.agenda-time {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-ember);
+  padding: 0.4em 0.8em;
+  background: rgba(255, 87, 34, 0.08);
+  border: 1px solid rgba(255, 87, 34, 0.2);
+  border-radius: 6px;
+  text-align: center;
+  width: fit-content;
+  position: relative;
+  z-index: 1;
+}
+
+.agenda-content {
+  padding-top: 0.2rem;
+}
+
+.agenda-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-light-text);
+  margin: 0 0 0.4rem 0;
+}
+
+.agenda-description {
+  font-size: 0.9rem;
+  color: var(--color-light-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Resources */
+.resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.resource-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(74, 74, 74, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--color-light-text);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.resource-link:hover {
+  background: rgba(255, 87, 34, 0.1);
+  border-color: var(--color-ember);
+  transform: translateX(4px);
+}
+
+.resource-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.resource-title {
+  flex: 1;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.resource-link svg {
+  color: var(--color-ember);
+  flex-shrink: 0;
+}
+
+/* Logistics */
+.logistics-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.logistics-item {
+  padding: 1rem;
+  background: rgba(255, 87, 34, 0.05);
+  border-left: 3px solid var(--color-ember);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.logistics-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-light-text);
+  margin-bottom: 0.5rem;
+}
+
+.logistics-label svg {
+  color: var(--color-ember);
+}
+
+.logistics-text {
+  font-size: 0.9rem;
+  color: var(--color-light-text-muted);
+  line-height: 1.5;
+  margin: 0;
+  padding-left: 1.75rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .agenda-item {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .agenda-item::before {
+    display: none;
+  }
+
+  .speaker-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .speaker-social {
+    justify-content: center;
+  }
+}

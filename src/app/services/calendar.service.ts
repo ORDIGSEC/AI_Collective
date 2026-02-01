@@ -2,7 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CalendarEvent, GoogleCalendarEvent, GoogleCalendarResponse } from '../models/event.model';
+import { CalendarEvent, GoogleCalendarEvent, GoogleCalendarResponse, ExtendedEvent } from '../models/event.model';
+import { EventDescriptionParser } from '../utils/event-parser';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,13 @@ export class CalendarService {
     const startDateTime = event.start.dateTime || event.start.date || '';
     const endDateTime = event.end.dateTime || event.end.date || '';
 
+    // Extract clean description (intro text before markdown sections)
+    const cleanDescription = this.extractIntroText(event.description || '');
+
     return {
       id: event.id,
       title: event.summary || 'Untitled Event',
-      description: event.description || '',
+      description: cleanDescription,
       location: event.location || '',
       start: new Date(startDateTime),
       end: new Date(endDateTime),
@@ -26,7 +30,57 @@ export class CalendarService {
     };
   }
 
-  getEvents(): Observable<CalendarEvent[]> {
+  /**
+   * Extract intro text from description (text before first ## section)
+   * and convert HTML to plain text
+   */
+  private extractIntroText(description: string): string {
+    if (!description) return '';
+
+    // Convert <br> tags to newlines
+    let text = description.replace(/<br\s*\/?>/gi, '\n');
+
+    // Remove all HTML tags
+    text = text.replace(/<[^>]+>/g, '');
+
+    // Decode HTML entities
+    text = text.replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                .replace(/&nbsp;/g, ' ');
+
+    // Extract only text before first ## marker (markdown sections)
+    const firstSection = text.indexOf('##');
+    if (firstSection !== -1) {
+      text = text.substring(0, firstSection);
+    }
+
+    // Clean up whitespace
+    return text.trim();
+  }
+
+  /**
+   * Transform and parse Google Calendar event into ExtendedEvent
+   */
+  private transformAndParse(googleEvent: GoogleCalendarEvent): ExtendedEvent {
+    const originalDescription = googleEvent.description || '';
+
+    // Transform the event with cleaned description
+    const calendarEvent = this.transformEvent(googleEvent);
+
+    // Parse the original description for extended data
+    const extendedData = EventDescriptionParser.parse(originalDescription);
+
+    return {
+      ...calendarEvent,
+      extendedData: extendedData || undefined,
+      hasExtendedData: !!extendedData
+    };
+  }
+
+  getEvents(): Observable<ExtendedEvent[]> {
     const url = `${this.baseUrl}/${encodeURIComponent(environment.calendarId)}/events`;
     const params = {
       key: environment.googleApiKey,
@@ -36,7 +90,9 @@ export class CalendarService {
     };
 
     return this.http.get<GoogleCalendarResponse>(url, { params }).pipe(
-      map(response => response.items.map(event => this.transformEvent(event))),
+      map(response => response.items
+        .map(event => this.transformAndParse(event))
+      ),
       catchError(error => {
         console.error('Failed to fetch calendar events:', error);
         return of([]);
@@ -44,7 +100,10 @@ export class CalendarService {
     );
   }
 
-  getUpcomingEvents(): Observable<CalendarEvent[]> {
+  /**
+   * Get upcoming events with enriched data from backend
+   */
+  getUpcomingEvents(): Observable<ExtendedEvent[]> {
     const url = `${this.baseUrl}/${encodeURIComponent(environment.calendarId)}/events`;
     const now = new Date().toISOString();
     const params = {
@@ -56,7 +115,9 @@ export class CalendarService {
     };
 
     return this.http.get<GoogleCalendarResponse>(url, { params }).pipe(
-      map(response => response.items.map(event => this.transformEvent(event))),
+      map(response => response.items
+        .map(event => this.transformAndParse(event))
+      ),
       catchError(error => {
         console.error('Failed to fetch upcoming events:', error);
         return of([]);
@@ -64,7 +125,7 @@ export class CalendarService {
     );
   }
 
-  getPastEvents(): Observable<CalendarEvent[]> {
+  getPastEvents(): Observable<ExtendedEvent[]> {
     const url = `${this.baseUrl}/${encodeURIComponent(environment.calendarId)}/events`;
     const now = new Date().toISOString();
     const params = {
@@ -76,7 +137,10 @@ export class CalendarService {
     };
 
     return this.http.get<GoogleCalendarResponse>(url, { params }).pipe(
-      map(response => response.items.map(event => this.transformEvent(event)).reverse()),
+      map(response => response.items
+        .map(event => this.transformAndParse(event))
+        .reverse()
+      ),
       catchError(error => {
         console.error('Failed to fetch past events:', error);
         return of([]);

@@ -139,3 +139,96 @@ If you need server-side functionality:
 3. Update nginx.conf to proxy `/api/*` to backend
 4. Update deployment to include backend container
 5. Update Angular to call backend instead of Calendar API directly
+
+## Development & Deployment Troubleshooting
+
+### Critical Deployment Workflow
+
+**ALWAYS use this sequence when deploying changes:**
+
+```bash
+# 1. Build the Angular application
+npm run build:prod
+
+# 2. Rebuild Docker image AND recreate container
+docker compose up -d --build app
+
+# 3. Verify files are in container (optional but recommended)
+docker exec hrmeetup-website-app-1 ls /usr/share/nginx/html/
+```
+
+**NEVER use `docker compose restart app`** - it only restarts the existing container without copying new build files.
+
+### Browser Caching Issues
+
+After deploying CSS/JS changes, users (and you) MUST clear browser cache:
+
+**Hard Refresh:**
+- Chrome/Firefox: `Ctrl+Shift+R` (Mac: `Cmd+Shift+R`)
+- DevTools method: F12 → Right-click refresh → "Empty Cache and Hard Reload"
+
+**Testing deployed changes:**
+- Use incognito/private mode to bypass cache
+- Or add cache-busting parameter: `http://localhost:8080/?v=2`
+
+**Verification:**
+- Check bundle hash in browser DevTools Network tab
+- Confirm it matches `docker exec hrmeetup-website-app-1 ls /usr/share/nginx/html/main*.js`
+
+### Large SVG Assets as Backgrounds
+
+**Problem:** Large SVG files (>1MB) as CSS `background-image` often fail to render silently in browsers, even when the file is accessible via direct URL.
+
+**Solutions that DON'T work:**
+- ❌ `background-image: url('/large-file.svg')` - fails silently
+- ❌ `<img src="/large-file.svg" style="position: absolute">` - also unreliable
+
+**Solutions that DO work:**
+- ✅ CSS-based patterns using `repeating-linear-gradient` - always renders
+- ✅ Optimize SVG with SVGO: `npx svgo input.svg -o output.svg --precision 1`
+- ✅ Inline small SVGs directly in templates
+- ✅ Use CSS patterns instead of complex SVGs for backgrounds
+
+**Example CSS pattern (topographic grid):**
+```css
+.section::before {
+  content: '';
+  position: absolute;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(87, 86, 85, 0.15) 79px, rgba(87, 86, 85, 0.15) 80px),
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(87, 86, 85, 0.1) 79px, rgba(87, 86, 85, 0.1) 80px);
+}
+```
+
+### Angular Asset Management
+
+**Static files location:** `public/` directory
+- Files in `public/` are copied to dist root during build
+- Referenced in CSS/HTML as `/filename.ext` (absolute path from root)
+- Confirmed in build: Check `dist/ai-collective/browser/` for copied files
+
+**Inline component styles:**
+- Styles in component `@Component({styles: [...]})` are bundled into JS
+- Changes require full Docker rebuild to deploy
+- Main bundle hash changes when component styles change (e.g., `main-ABC123.js`)
+
+### Design System Notes
+
+**Current color palette:** "Alpine Intelligence" theme
+- Dark backgrounds: `var(--color-midnight)` (#1a1a1a), `var(--color-charcoal)` (#2a2a2a)
+- Text on dark: `var(--color-cream)` (#f5f1e8), `var(--color-sand)` (#d4cbb8)
+- Accent: `var(--color-ember)` (#ff5722) - orange, NOT blue
+- NO blue colors anywhere in the design
+
+**Typography:**
+- Display: Anybody (geometric, outdoor-tech)
+- Body: DM Sans (clean, readable)
+- Mono: IBM Plex Mono (technical)
+
+### Common Pitfalls
+
+1. **Forgetting to rebuild Docker image** - Changes to dist/ don't automatically appear in container
+2. **Browser cache** - Always test with hard refresh or incognito after deployment
+3. **Large SVG backgrounds** - Use CSS patterns or optimize heavily with SVGO
+4. **Path references** - Use `/filename` (absolute) not `./filename` (relative) for public assets
+5. **Component style changes** - Require Docker rebuild, not just container restart

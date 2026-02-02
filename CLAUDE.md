@@ -29,19 +29,18 @@ npm run build:prod
 # Run tests
 npm test
 
-# Docker build
-docker build -t ai-collective .
+# Operations (see DEPLOYMENT.md for details)
+./deploy.sh status              # Check container status and health
+./deploy.sh logs [service]      # View logs (app, backend, db, watchtower)
+./deploy.sh pull                # Git pull + recreate containers
+./deploy.sh force               # Force pull latest images + recreate
+./deploy.sh rollback <svc> <tag> # Rollback to specific version
 
-# Docker run locally
-docker run -p 8080:8080 ai-collective
-
-# Docker Compose
-docker compose up -d
-docker compose down
-docker compose logs -f
-
-# Deploy to production
-./deploy.sh
+# Docker Compose (manual operations)
+docker compose up -d            # Start all services
+docker compose down             # Stop all services
+docker compose ps               # Show status
+docker compose logs -f          # Follow logs
 ```
 
 ## Project Structure
@@ -78,17 +77,43 @@ AI_Collective/
 ## Architecture
 
 ```
-Browser (Angular) → Google Calendar API (direct HTTPS)
-        ↓
-   Cloudflare Tunnel → localhost:8080 (Docker + nginx)
+┌─────────────────────────────────────────────────────────────┐
+│ Developer: git push origin main                              │
+└──────────────────┬──────────────────────────────────────────┘
+                   ↓
+┌─────────────────────────────────────────────────────────────┐
+│ GitHub Actions: Build & Push to GHCR                         │
+│  - Frontend → ghcr.io/ordigsec/ai_collective:latest          │
+│  - Backend → ghcr.io/ordigsec/ai_collective-backend:latest   │
+└──────────────────┬──────────────────────────────────────────┘
+                   ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Watchtower: Auto-deploy (polls every 3 minutes)              │
+│  - Detects new images                                        │
+│  - Rolling restart (zero downtime)                           │
+└──────────────────┬──────────────────────────────────────────┘
+                   ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Production Server                                            │
+│  - Frontend (Angular 19) → nginx:8080                        │
+│  - Backend (Node.js) → :3000                                 │
+│  - Database (PostgreSQL 15) → :5432                          │
+└──────────────────┬──────────────────────────────────────────┘
+                   ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Cloudflare Tunnel → hoodriveraicollective.com                │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 **Key Points:**
 
-- No backend service - Angular calls Google Calendar API directly
-- API key is exposed in browser (acceptable for public calendar)
-- nginx serves static files with SPA routing (fallback to index.html)
-- Deployed locally via Docker, exposed through Cloudflare Tunnel
+- **CI/CD**: Push to main → GitHub Actions → GHCR → Watchtower → Live (3-5 minutes)
+- **Frontend**: Angular 19 SPA served by nginx
+- **Backend**: Node.js API with PostgreSQL database
+- **Auto-deployment**: Watchtower monitors GHCR and auto-deploys frontend + backend
+- **Database**: NOT auto-deployed (manual control for schema safety)
+- **Images**: Multi-arch (amd64, arm64) hosted on GitHub Container Registry
+- **Rollback**: Tag-based rollback via `./deploy.sh rollback <service> <tag>`
 
 ## Configuration
 
@@ -109,17 +134,52 @@ export const environment = {
 
 ## Deployment
 
-The site is deployed locally using Docker and exposed via Cloudflare Tunnel. See **DEPLOYMENT.md** for complete setup instructions.
+The site uses an automated CI/CD pipeline with GitHub Container Registry (ghcr.io) and Watchtower for auto-deployment. See **DEPLOYMENT.md** for complete setup instructions.
+
+### Automated Deployment Workflow
 
 ```bash
-# Deploy using the deployment script
-./deploy.sh
+# 1. Push changes to main
+git add .
+git commit -m "feat: add new feature"
+git push origin main
 
-# The script handles:
-# - Building the Docker image
-# - Starting the container via docker compose
-# - Verifying the deployment
+# 2. GitHub Actions builds and pushes images to GHCR (1-2 minutes)
+
+# 3. Watchtower detects and deploys new images (0-3 minutes)
+
+# 4. Verify deployment
+./deploy.sh status
+curl https://hoodriveraicollective.com
 ```
+
+**Total time from push to live: 3-5 minutes**
+
+### Manual Operations
+
+```bash
+# Check status
+./deploy.sh status
+
+# View logs
+./deploy.sh logs app
+./deploy.sh logs backend
+
+# Force update (if Watchtower missed it)
+./deploy.sh force
+
+# Rollback to previous version
+./deploy.sh rollback app main-abc1234
+./deploy.sh rollback backend main-def5678
+```
+
+### Key Features
+
+- **Auto-deployment**: Watchtower polls GHCR every 3 minutes and auto-deploys changes
+- **Zero downtime**: Rolling restarts ensure continuous availability
+- **Easy rollback**: Pin any service to a specific image tag
+- **Database safety**: PostgreSQL NOT auto-deployed (manual migrations only)
+- **Multi-arch images**: Supports both amd64 and arm64 platforms
 
 ## Design Guidelines
 
@@ -144,20 +204,32 @@ If you need server-side functionality:
 
 ### Critical Deployment Workflow
 
-**ALWAYS use this sequence when deploying changes:**
+**Automated deployment (preferred):**
 
 ```bash
-# 1. Build the Angular application
-npm run build:prod
+# Push to main - everything else is automatic
+git push origin main
 
-# 2. Rebuild Docker image AND recreate container
-docker compose up -d --build app
-
-# 3. Verify files are in container (optional but recommended)
-docker exec hrmeetup-website-app-1 ls /usr/share/nginx/html/
+# Wait 3-5 minutes, then verify
+./deploy.sh status
 ```
 
-**NEVER use `docker compose restart app`** - it only restarts the existing container without copying new build files.
+**Manual deployment (if needed):**
+
+```bash
+# Force pull and recreate containers
+./deploy.sh force
+
+# Or use docker compose directly
+docker compose pull app backend
+docker compose up -d --force-recreate app backend
+```
+
+**Important notes:**
+- Images are built by GitHub Actions and pushed to GHCR
+- Watchtower automatically pulls and deploys new images
+- Database is NOT auto-deployed (manual control for schema safety)
+- Use `./deploy.sh rollback` for quick rollback to previous versions
 
 ### Browser Caching Issues
 
@@ -227,8 +299,9 @@ After deploying CSS/JS changes, users (and you) MUST clear browser cache:
 
 ### Common Pitfalls
 
-1. **Forgetting to rebuild Docker image** - Changes to dist/ don't automatically appear in container
+1. **Waiting for auto-deployment** - Changes take 3-5 minutes to go live (GitHub Actions + Watchtower poll)
 2. **Browser cache** - Always test with hard refresh or incognito after deployment
-3. **Large SVG backgrounds** - Use CSS patterns or optimize heavily with SVGO
-4. **Path references** - Use `/filename` (absolute) not `./filename` (relative) for public assets
-5. **Component style changes** - Require Docker rebuild, not just container restart
+3. **Database schema changes** - Pause Watchtower first to prevent backend update mid-migration
+4. **Large SVG backgrounds** - Use CSS patterns or optimize heavily with SVGO
+5. **Path references** - Use `/filename` (absolute) not `./filename` (relative) for public assets
+6. **Rollback confusion** - Remember to restore auto-updates with `./deploy.sh rollback <service> latest`

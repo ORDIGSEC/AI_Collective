@@ -1,26 +1,61 @@
-# Quick Reference - Hood River AI Collective Deployment
-# Source this file for helpful aliases: source .deployrc
+# Hood River AI Collective - Deployment Aliases
+# Source this file: source .deployrc
 
-# Deployment aliases
-alias deploy='./deploy.sh'
-alias deploy-logs='tail -f deploy.log'
+# Operations
+alias status='./deploy.sh status'
+alias logs='./deploy.sh logs'
+alias force='./deploy.sh force'
+alias pull='./deploy.sh pull'
 
-# Docker aliases
+# Service-specific logs
+alias logs-app='./deploy.sh logs app'
+alias logs-backend='./deploy.sh logs backend'
+alias logs-db='./deploy.sh logs db'
+alias logs-watchtower='./deploy.sh logs watchtower'
+
+# Container management
 alias dc='docker compose'
-alias dc-up='docker compose up -d'
-alias dc-down='docker compose down'
-alias dc-restart='docker compose restart'
-alias dc-logs='docker compose logs -f'
-alias dc-ps='docker compose ps'
-alias dc-build='docker compose build --no-cache'
-
-# Container access
-alias app-shell='docker compose exec app sh'
-alias app-logs='docker compose logs -f app'
+alias dps='docker compose ps'
+alias dup='docker compose up -d'
+alias ddown='docker compose down'
+alias drestart='docker compose restart'
 
 # Health checks
-alias check-health='curl -s http://localhost:8080/health && echo " ✓ Healthy"'
-alias check-site='curl -s http://localhost:8080 | head -20'
+alias health-app='curl -sf http://localhost:8080/health && echo "✓ Frontend healthy" || echo "✗ Frontend unhealthy"'
+alias health-backend='docker compose exec backend wget -q --spider http://127.0.0.1:3000/health && echo "✓ Backend healthy" || echo "✗ Backend unhealthy"'
+alias health-db='docker compose exec db pg_isready -U postgres && echo "✓ Database healthy" || echo "✗ Database unhealthy"'
+alias health-all='health-app && health-backend && health-db'
+
+# Image management
+alias images='docker compose images'
+alias pull-images='docker compose pull app backend'
+alias prune-images='docker image prune -a'
+
+# Watchtower
+alias watchtower-logs='./deploy.sh logs watchtower'
+alias watchtower-pause='docker compose stop watchtower && echo "⚠ Auto-updates paused"'
+alias watchtower-resume='docker compose start watchtower && echo "✓ Auto-updates resumed"'
+alias watchtower-status='docker compose ps watchtower'
+
+# Rollback helpers
+alias rollback-app='function _rollback_app() { ./deploy.sh rollback app "$1"; }; _rollback_app'
+alias rollback-backend='function _rollback_backend() { ./deploy.sh rollback backend "$1"; }; _rollback_backend'
+alias restore-app='./deploy.sh rollback app latest'
+alias restore-backend='./deploy.sh rollback backend latest'
+
+# Database
+alias db-shell='docker compose exec db psql -U postgres -d hrai_collective'
+alias db-backup='docker compose exec db pg_dump -U postgres hrai_collective > backup_$(date +%Y%m%d_%H%M%S).sql'
+alias db-logs='./deploy.sh logs db'
+
+# Git shortcuts
+alias gst='git status'
+alias glog='git log --oneline --graph --decorate -10'
+alias gpush='git push origin main'
+
+# Site access
+alias site='curl -I https://hoodriveraicollective.com'
+alias local='curl -I http://localhost:8080'
 
 # Cloudflare Tunnel
 alias tunnel-status='sudo systemctl status cloudflared'
@@ -28,22 +63,74 @@ alias tunnel-restart='sudo systemctl restart cloudflared'
 alias tunnel-logs='sudo journalctl -u cloudflared -f'
 alias tunnel-info='cloudflared tunnel info hr-ai-sites'
 
-# Git operations
-alias git-status='git status'
-alias git-pull='git pull'
-alias git-log='git log --oneline -10'
+# Helpful commands
+alias help-deploy='cat <<EOF
+Hood River AI Collective - Deployment Commands
 
-# Monitoring
-alias watch-logs='watch -n 2 "docker compose logs --tail=20"'
-alias watch-health='watch -n 5 "curl -s http://localhost:8080/health"'
+OPERATIONS:
+  status              Show container status and health
+  logs [service]      View logs (app, backend, db, watchtower)
+  force               Force pull latest images + recreate
+  pull                Git pull + recreate containers
 
-# Cleanup
-alias docker-clean='docker system prune -a'
-alias docker-usage='docker system df'
+ROLLBACK:
+  rollback-app <tag>      Rollback frontend to specific version
+  rollback-backend <tag>  Rollback backend to specific version
+  restore-app             Restore frontend auto-updates
+  restore-backend         Restore backend auto-updates
 
-echo "Deployment aliases loaded!"
-echo "  deploy          - Run deployment script"
-echo "  dc-logs         - View container logs"
-echo "  check-health    - Test health endpoint"
-echo "  tunnel-status   - Check Cloudflare Tunnel"
-echo "  Type 'alias' to see all available commands"
+HEALTH CHECKS:
+  health-app          Check frontend health
+  health-backend      Check backend health
+  health-db           Check database health
+  health-all          Check all services
+
+WATCHTOWER:
+  watchtower-logs     View Watchtower logs
+  watchtower-pause    Pause auto-updates
+  watchtower-resume   Resume auto-updates
+  watchtower-status   Check Watchtower status
+
+DATABASE:
+  db-shell            Open PostgreSQL shell
+  db-backup           Backup database to file
+  db-logs             View database logs
+
+DOCKER:
+  dc                  docker compose
+  dps                 Show container status
+  dup                 Start all services
+  ddown               Stop all services
+  drestart            Restart all services
+
+IMAGES:
+  images              List current images
+  pull-images         Pull latest images manually
+  prune-images        Remove old/unused images
+
+GIT:
+  gst                 git status
+  glog                git log (last 10 commits)
+  gpush               git push origin main
+
+SITE:
+  site                Check live site status
+  local               Check local site status
+
+CLOUDFLARE TUNNEL:
+  tunnel-status       Check tunnel service
+  tunnel-restart      Restart tunnel
+  tunnel-logs         View tunnel logs
+  tunnel-info         Show tunnel info
+
+Examples:
+  status                          # Check everything
+  rollback-app main-abc1234       # Rollback frontend
+  watchtower-pause                # Pause auto-updates
+  db-shell                        # Open database
+  logs-watchtower                 # Watch for deployments
+EOF
+'
+
+echo "✓ Deployment aliases loaded"
+echo "Run 'help-deploy' for available commands"

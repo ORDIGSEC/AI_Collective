@@ -1,12 +1,33 @@
 services:
+  # Nginx Reverse Proxy (Entry Point)
+  proxy:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "8080:80"  # Only exposed port
+    volumes:
+      - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+      - open-webui
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - frontend
+      - backend
+
+  # Hood River AI Collective App (Angular + nginx)
   app:
     image: ${IMAGE:-ghcr.io/ordigsec/ai_collective:latest}
     pull_policy: always
-    ports:
-      - "8080:8080"
     restart: unless-stopped
     depends_on:
       - backend
+    expose:
+      - "8080"  # Internal only
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/health"]
       interval: 30s
@@ -15,7 +36,11 @@ services:
       start_period: 10s
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - frontend
+      - backend
 
+  # Hood River Backend (Node.js API)
   backend:
     image: ${BACKEND_IMAGE:-ghcr.io/ordigsec/ai_collective-backend:latest}
     pull_policy: always
@@ -40,7 +65,10 @@ services:
       start_period: 10s
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - backend
 
+  # PostgreSQL Database
   db:
     image: postgres:15-alpine
     restart: unless-stopped
@@ -56,9 +84,46 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"  # Internal only
+    networks:
+      - backend
 
+  # Open WebUI (AI Chat Interface)
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG:-main}
+    container_name: open-webui
+    restart: unless-stopped
+    volumes:
+      - openwebui-github_open-webui:/app/backend/data
+    depends_on:
+      - ollama
+    expose:
+      - "8080"  # Internal only
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:-}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - frontend
+      - ai
+
+  # Ollama (Local LLM Server)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    volumes:
+      - openwebui-github_ollama:/root/.ollama
+    expose:
+      - "11434"  # Internal only
+    networks:
+      - ai
+
+  # Watchtower (Auto-deployment)
   watchtower:
     image: containrrr/watchtower
     restart: unless-stopped
@@ -72,7 +137,21 @@ services:
       - WATCHTOWER_ROLLING_RESTART=true
       - DOCKER_CONFIG=/
       - DOCKER_API_VERSION=1.44
-    command: --interval 180
+    command: --interval 180 open-webui ollama
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+  ai:
+    driver: bridge
 
 volumes:
   postgres_data:
+  openwebui-github_ollama:
+    external: true
+  openwebui-github_open-webui:
+    external: true

@@ -8,15 +8,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-page website for a monthly AI Meetup in Hood River, Oregon. Built with Angular 19 (standalone components). Events are loaded dynamically from Google Calendar API (client-side). Deployed locally via Docker and Cloudflare Tunnel.
+Unified deployment serving two sites via nginx reverse proxy:
+- **Hood River AI Collective** (hoodriveraicollective.com): Single-page website for monthly AI Meetup in Hood River, Oregon. Built with Angular 19 (standalone components). Events loaded dynamically from Google Calendar API (client-side).
+- **Open WebUI** (chat.hoodriveraicollective.com): AI chat interface powered by Ollama for local LLM interactions.
 
-**Live URL:** <https://hoodriveraicollective.com>
+**Live URLs:**
+- <https://hoodriveraicollective.com> (Hood River site)
+- <https://chat.hoodriveraicollective.com> (Open WebUI)
 
 **Event Data Source:**
 
 - Google Calendar API (public calendar with API key)
 - Angular HttpClient fetches events directly from browser
-- No backend required - fully client-side
+- No backend required for events - fully client-side
 
 ## Commands
 
@@ -35,7 +39,7 @@ npm test
 
 # Operations (see DEPLOYMENT.md for details)
 ./deploy.sh status              # Check container status and health
-./deploy.sh logs [service]      # View logs (app, backend, db, watchtower)
+./deploy.sh logs [service]      # View logs (proxy, app, backend, db, open-webui, ollama, watchtower)
 ./deploy.sh pull                # Git pull + recreate containers
 ./deploy.sh force               # Force pull latest images + recreate
 ./deploy.sh rollback <svc> <tag> # Rollback to specific version
@@ -93,30 +97,37 @@ AI_Collective/
                    ↓
 ┌─────────────────────────────────────────────────────────────┐
 │ Watchtower: Auto-deploy (polls every 3 minutes)              │
-│  - Detects new images                                        │
+│  - Detects GHCR images (Hood River frontend + backend)       │
+│  - Monitors Docker Hub (Open WebUI + Ollama)                 │
 │  - Rolling restart (zero downtime)                           │
 └──────────────────┬──────────────────────────────────────────┘
                    ↓
 ┌─────────────────────────────────────────────────────────────┐
-│ Production Server                                            │
-│  - Frontend (Angular 19) → nginx:8080                        │
-│  - Backend (Node.js) → :3000                                 │
-│  - Database (PostgreSQL 15) → :5432                          │
+│ Production Server (Unified Docker Compose)                   │
+│  - Nginx Proxy → :8080 (reverse proxy by subdomain)         │
+│    ├─ hoodriveraicollective.com → app:8080                  │
+│    │   └─ Backend (Node.js) → :3000 → db:5432               │
+│    └─ chat.hoodriveraicollective.com → open-webui:8080      │
+│        └─ Ollama (LLM) → :11434                              │
 └──────────────────┬──────────────────────────────────────────┘
                    ↓
 ┌─────────────────────────────────────────────────────────────┐
-│ Cloudflare Tunnel → hoodriveraicollective.com                │
+│ Cloudflare Tunnel → *.hoodriveraicollective.com              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 **Key Points:**
 
-- **CI/CD**: Push to main → GitHub Actions → GHCR → Watchtower → Live (3-5 minutes)
-- **Frontend**: Angular 19 SPA served by nginx
+- **Unified Deployment**: Single docker-compose.yml serves both Hood River site and Open WebUI via nginx reverse proxy
+- **Subdomain Routing**: hoodriveraicollective.com → Angular site, chat.hoodriveraicollective.com → Open WebUI
+- **CI/CD**: Push to main → GitHub Actions → GHCR → Watchtower → Live (3-5 minutes) for Hood River
+- **Frontend**: Angular 19 SPA served by nginx (app container)
 - **Backend**: Node.js API with PostgreSQL database
-- **Auto-deployment**: Watchtower monitors GHCR and auto-deploys frontend + backend
+- **Open WebUI**: AI chat interface with Ollama for local LLMs
+- **Auto-deployment**: Watchtower monitors GHCR (Hood River) and Docker Hub (Open WebUI, Ollama)
 - **Database**: NOT auto-deployed (manual control for schema safety)
-- **Images**: Multi-arch (amd64, arm64) hosted on GitHub Container Registry
+- **Images**: Multi-arch (amd64, arm64) hosted on GitHub Container Registry (Hood River) and Docker Hub (Open WebUI)
+- **Data Persistence**: Open WebUI data stored in external volumes (openwebui-github_open-webui, openwebui-github_ollama)
 - **Rollback**: Tag-based rollback via `./deploy.sh rollback <service> <tag>`
 
 ## Configuration

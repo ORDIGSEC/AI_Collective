@@ -229,3 +229,6 @@ contours.svg
 
 # Old/unused components
 src/app/components/shared/
+
+# Claude session history (local only)
+CHANGELOG.md

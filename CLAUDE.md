@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Session History
+
+**IMPORTANT:** Check `CHANGELOG.md` (local file, not in git) for recent session history and context. This file contains concise summaries of previous Claude sessions, key decisions made, and current project state. Read it first to understand recent changes and ongoing work.
+
 ## Project Overview
 
 Single-page website for a monthly AI Meetup in Hood River, Oregon. Built with Angular 19 (standalone components). Events are loaded dynamically from Google Calendar API (client-side). Deployed locally via Docker and Cloudflare Tunnel.

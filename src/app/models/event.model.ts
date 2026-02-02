@@ -6,6 +6,7 @@ export interface CalendarEvent {
   start: Date;
   end: Date;
   htmlLink: string;
+  meetupUrl?: string;
 }
 
 export interface GoogleCalendarEvent {

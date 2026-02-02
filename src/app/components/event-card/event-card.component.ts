@@ -65,6 +65,18 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
               <line x1="10" y1="14" x2="21" y2="3"></line>
             </svg>
           </a>
+          @if (event.meetupUrl) {
+            <a [href]="event.meetupUrl" target="_blank" rel="noopener noreferrer" class="meetup-link"
+               (click)="$event.stopPropagation()">
+              <span class="meetup-icon">👥</span>
+              RSVP on Meetup
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          }
           @if (event.hasExtendedData) {
             <span class="expandable-badge">+ More Details</span>
           }
@@ -174,7 +186,8 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
       overflow: hidden;
     }
 
-    .event-link {
+    .event-link,
+    .meetup-link {
       display: inline-flex;
       align-items: center;
       gap: 0.375rem;
@@ -185,8 +198,14 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
       transition: color var(--transition-base);
     }
 
-    .event-link:hover {
+    .event-link:hover,
+    .meetup-link:hover {
       color: var(--color-rust);
+    }
+
+    .meetup-icon {
+      font-size: 1rem;
+      line-height: 1;
     }
 
     /* Expandable card styles */

@@ -62,6 +62,21 @@ export class CalendarService {
   }
 
   /**
+   * Extract Meetup URL from event description
+   */
+  private extractMeetupUrl(description: string): string | undefined {
+    if (!description) return undefined;
+
+    // Look for Meetup URL patterns:
+    // - Direct URL: https://www.meetup.com/group-name/events/123456789
+    // - Labeled: Meetup: https://www.meetup.com/...
+    // - Markdown link: [RSVP on Meetup](url)
+    const meetupRegex = /https?:\/\/(?:www\.)?meetup\.com\/[^\/\s]+\/events\/\d+/i;
+    const match = description.match(meetupRegex);
+    return match ? match[0] : undefined;
+  }
+
+  /**
    * Transform and parse Google Calendar event into ExtendedEvent
    */
   private transformAndParse(googleEvent: GoogleCalendarEvent): ExtendedEvent {
@@ -73,8 +88,12 @@ export class CalendarService {
     // Parse the original description for extended data
     const extendedData = EventDescriptionParser.parse(originalDescription);
 
+    // Extract Meetup URL
+    const meetupUrl = this.extractMeetupUrl(originalDescription);
+
     return {
       ...calendarEvent,
+      meetupUrl,
       extendedData: extendedData || undefined,
       hasExtendedData: !!extendedData
     };

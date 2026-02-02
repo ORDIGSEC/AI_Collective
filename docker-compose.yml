@@ -71,6 +71,7 @@ services:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_ROLLING_RESTART=true
       - DOCKER_CONFIG=/
+      - DOCKER_API_VERSION=1.44
     command: --interval 180
 
 volumes:

@@ -6,6 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **IMPORTANT:** Check `CHANGELOG.md` (local file, not in git) for recent session history and context. This file contains concise summaries of previous Claude sessions, key decisions made, and current project state. Read it first to understand recent changes and ongoing work.
 
+## Development Guidelines
+
+### Helper Scripts and Troubleshooting Tools
+
+**IMPORTANT:** When creating helper scripts, troubleshooting tools, or temporary files during development sessions:
+
+1. **Store in `scripts-local/` directory** - This folder is gitignored and won't be committed
+2. **Never commit to repo** - Helper scripts are server-specific and not part of the codebase
+3. **Document in CHANGELOG.md** - Note what scripts were created and their purpose for future reference
+
+**Examples of local-only files:**
+- Troubleshooting scripts (e.g., `force-reload-cloudflared.sh`)
+- Configuration helpers (e.g., `update-cloudflare-config.sh`)
+- Migration plans and backup files
+- One-off diagnostic tools
+
+**Committed to repo:**
+- Core operational scripts: `deploy.sh`, `migrate-to-unified.sh`, `rollback-migration.sh`
+- Production infrastructure files: `docker-compose.yml`, `nginx-proxy.conf`
+- Documentation: `CLAUDE.md`, `DEPLOYMENT.md`, `MIGRATION-SUMMARY.md`
+
 ## Project Overview
 
 Unified deployment serving two sites via nginx reverse proxy:

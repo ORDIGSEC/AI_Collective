@@ -105,6 +105,8 @@ services:
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:-}
     extra_hosts:
       - host.docker.internal:host-gateway
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - frontend
       - ai
@@ -120,6 +122,8 @@ services:
       - openwebui-github_ollama:/root/.ollama
     expose:
       - "11434"  # Internal only
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - ai
 
@@ -137,7 +141,7 @@ services:
       - WATCHTOWER_ROLLING_RESTART=true
       - DOCKER_CONFIG=/
       - DOCKER_API_VERSION=1.44
-    command: --interval 180 open-webui ollama
+    command: --interval 180
     networks:
       - backend
 

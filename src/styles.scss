@@ -1,50 +1,47 @@
 /* ==========================================================================
-   Hood River AI Collective — Alpine Intelligence (Global)
+   Hood River AI Collective — Clean Outdoor (Global)
    ========================================================================== */
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Anybody:wght@500;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
 :root {
-  /* Color Palette - Alpine Intelligence */
+  /* Color Palette - Clean Outdoor */
 
   /* Backgrounds & Structure */
-  --color-midnight: #1a1a1a;
-  --color-charcoal: #2a2a2a;
-  --color-graphite: #3a3a3a;
-  --color-slate-dark: #4a4a4a;
+  --color-midnight: #32373c;
+  --color-charcoal: #4a5057;
+  --color-graphite: #f9fafb;
+  --color-slate-dark: #6b7280;
 
   /* Text Colors */
-  --color-cream: #f5f1e8;
-  --color-sand: #d4cbb8;
-  --color-stone: #9a9388;
+  --color-cream: #ffffff;
+  --color-sand: #6b7280;
+  --color-stone: #9ca3af;
 
   /* Light Section Colors (for alternating backgrounds) */
-  --color-light-bg: #f5f1e8;
-  --color-light-text: #2a2a2a;
-  --color-light-text-muted: #4a4a4a;
+  --color-light-bg: #f9fafb;
+  --color-light-text: #1f2937;
+  --color-light-text-muted: #6b7280;
 
   /* Accent Colors */
-  --color-ember: #ff5722;
-  --color-rust: #d84315;
-  --color-clay: #bf360c;
+  --color-ember: #ff6900;
+  --color-rust: #e55d00;
+  --color-clay: #cc5200;
   --color-sage: #8b9a7f;
   --color-ridge: #7a8970;
   --color-terrain: #6d5d4b;
 
   /* Topographic Elements */
-  --contour-light: rgba(212, 203, 184, 0.08);
-  --contour-medium: rgba(212, 203, 184, 0.12);
-  --contour-strong: rgba(212, 203, 184, 0.18);
+  --contour-light: rgba(0, 0, 0, 0.06);
+  --contour-medium: rgba(0, 0, 0, 0.1);
+  --contour-strong: rgba(0, 0, 0, 0.15);
 
   /* Gradients */
-  --gradient-ember: linear-gradient(135deg, #ff5722 0%, #d84315 100%);
-  --gradient-radial-ember: radial-gradient(circle at 50% 50%, rgba(255, 87, 34, 0.15) 0%, transparent 70%);
+  --gradient-ember: linear-gradient(135deg, #ff6900 0%, #e55d00 100%);
+  --gradient-radial-ember: none;
 
   /* Typography */
-  --font-display: 'Anybody', system-ui, sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-display: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
 
   /* Font Weights */
   --font-weight-normal: 400;
@@ -67,14 +64,15 @@
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
+  --radius-pill: 9999px;
 
-  /* Shadows - Dark Theme */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6), 0 4px 8px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.7), 0 8px 16px rgba(0, 0, 0, 0.6);
-  --shadow-ember-glow: 0 8px 24px rgba(255, 87, 34, 0.3), 0 4px 12px rgba(255, 87, 34, 0.2);
-  --shadow-ember-strong: 0 12px 32px rgba(255, 87, 34, 0.4), 0 6px 16px rgba(255, 87, 34, 0.3);
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 6px 6px 9px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 12px 12px 50px rgba(0, 0, 0, 0.15);
+  --shadow-ember-glow: none;
+  --shadow-ember-strong: 0 4px 16px rgba(255, 105, 0, 0.15);
 
   /* Transitions */
   --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -109,7 +107,7 @@ body {
   font-family: var(--font-body);
   font-weight: var(--font-weight-normal);
   line-height: 1.65;
-  color: var(--color-sand);
+  color: var(--color-light-text);
   background-color: var(--color-cream);
   overflow-x: hidden;
   position: relative;
@@ -124,7 +122,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-weight-black);
   line-height: 1.2;
   margin: 0;
-  color: var(--color-cream);
+  color: var(--color-light-text);
 }
 
 h1 {
@@ -150,10 +148,7 @@ p {
 }
 
 .text-gradient {
-  background: var(--gradient-ember);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-ember);
 }
 
 .text-code {
@@ -192,7 +187,7 @@ button {
   font-weight: 600;
   font-size: 1rem;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   cursor: pointer;
   transition: all var(--transition-base);
   text-decoration: none;
@@ -201,32 +196,15 @@ button {
 }
 
 .btn-primary {
-  background: var(--gradient-ember);
-  color: var(--color-cream);
-  box-shadow: var(--shadow-ember-glow);
-}
-
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.btn-primary:hover::before {
-  width: 300px;
-  height: 300px;
+  background: var(--color-ember);
+  color: #ffffff;
+  box-shadow: none;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl), var(--shadow-ember-strong);
+  background: var(--color-rust);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ==========================================================================
@@ -250,7 +228,7 @@ button {
 
 .section-dark {
   background-color: var(--color-midnight);
-  color: var(--color-sand);
+  color: var(--color-light-text-muted);
 }
 
 .section-light {
@@ -264,18 +242,16 @@ button {
 }
 
 .glassmorphism {
-  background: rgba(42, 42, 42, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--contour-medium);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
 }
 
 .card {
-  background: var(--color-graphite);
+  background: #ffffff;
   border-radius: var(--radius-md);
-  border: 1px solid var(--contour-light);
+  border: 1px solid #e5e7eb;
   padding: var(--space-4);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   transition: all var(--transition-base);
   position: relative;
 }
@@ -376,8 +352,8 @@ img {
   position: absolute;
   top: -40px;
   left: 0;
-  background: var(--color-charcoal);
-  color: var(--color-cream);
+  background: var(--color-midnight);
+  color: #ffffff;
   padding: 0.75rem 1.5rem;
   z-index: 100;
   border-radius: 0 0 var(--radius-sm) 0;
@@ -439,13 +415,6 @@ img {
 @media (max-width: 1024px) {
   :root {
     --gutter: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .section-contour {
-    background-size: 150%;
-    background-position: center top;
   }
 }
 

@@ -63,18 +63,18 @@ import { Component, HostListener } from '@angular/core';
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(42, 42, 42, 0.75);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--contour-medium);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
       padding: 1rem 0;
       transition: all var(--transition-base);
     }
 
     .site-nav.scrolled {
-      background: rgba(42, 42, 42, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       box-shadow: var(--shadow-md);
-      border-bottom-color: var(--contour-strong);
+      border-bottom-color: rgba(0, 0, 0, 0.1);
     }
 
     .nav-inner {
@@ -99,7 +99,7 @@ import { Component, HostListener } from '@angular/core';
       font-family: var(--font-display);
       font-size: 1.25rem;
       font-weight: var(--font-weight-black);
-      color: var(--color-cream);
+      color: var(--color-light-text);
       letter-spacing: -0.02em;
     }
 
@@ -116,7 +116,7 @@ import { Component, HostListener } from '@angular/core';
       font-size: 0.95rem;
       font-weight: var(--font-weight-bold);
       text-decoration: none;
-      color: var(--color-sand);
+      color: var(--color-light-text-muted);
       letter-spacing: 0.02em;
       text-transform: uppercase;
       padding: 0.5rem 0;
@@ -137,7 +137,7 @@ import { Component, HostListener } from '@angular/core';
     }
 
     .nav-links a:hover {
-      color: var(--color-cream);
+      color: var(--color-light-text);
     }
 
     .nav-links a:hover::after {
@@ -150,22 +150,11 @@ import { Component, HostListener } from '@angular/core';
       text-align: center;
       position: relative;
       overflow: hidden;
-      background: var(--color-midnight);
+      background: var(--color-cream);
     }
 
     .hero::before {
-      content: '';
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 800px;
-      height: 800px;
-      border-radius: 50%;
-      background: var(--gradient-radial-ember);
-      pointer-events: none;
-      z-index: 0;
-      animation: float 8s ease-in-out infinite;
+      display: none;
     }
 
     .hero-inner {
@@ -178,7 +167,7 @@ import { Component, HostListener } from '@angular/core';
 
     .hero h1 {
       font-size: clamp(3rem, 7vw, 5.5rem);
-      color: var(--color-cream);
+      color: var(--color-light-text);
       letter-spacing: -0.03em;
       margin-bottom: 1.5rem;
       font-weight: var(--font-weight-black);
@@ -187,15 +176,12 @@ import { Component, HostListener } from '@angular/core';
 
     .hero h1 em {
       font-style: italic;
-      background: var(--gradient-ember);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--color-ember);
     }
 
     .hero-subtitle {
       font-size: clamp(1.1rem, 2vw, 1.35rem);
-      color: var(--color-sand);
+      color: var(--color-light-text-muted);
       max-width: 640px;
       margin: 0 auto 3rem;
       font-weight: var(--font-weight-medium);
@@ -217,7 +203,7 @@ import { Component, HostListener } from '@angular/core';
       gap: 0.6em;
       font-size: 0.95rem;
       font-weight: var(--font-weight-medium);
-      color: var(--color-sand);
+      color: var(--color-light-text-muted);
     }
 
     .hero-meta-icon {

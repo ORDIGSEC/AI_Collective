@@ -100,9 +100,9 @@ type FilterType = 'all' | 'upcoming' | 'past';
       font-weight: 500;
       letter-spacing: 0.01em;
       padding: 0.6em 1.5em;
-      border: 1.5px solid rgba(74, 74, 74, 0.2);
+      border: 1.5px solid rgba(0, 0, 0, 0.12);
       border-radius: 100px;
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.8);
       color: var(--color-light-text-muted);
       cursor: pointer;
       transition: all var(--transition-base);
@@ -111,7 +111,7 @@ type FilterType = 'all' | 'upcoming' | 'past';
     .filter-tabs button:hover {
       border-color: var(--color-ember);
       color: var(--color-light-text);
-      background: rgba(255, 255, 255, 0.9);
+      background: #ffffff;
     }
 
     .filter-tabs button:focus-visible {
@@ -143,7 +143,7 @@ type FilterType = 'all' | 'upcoming' | 'past';
     .loading-spinner {
       width: 32px;
       height: 32px;
-      border: 3px solid var(--color-light-bg);
+      border: 3px solid #e5e7eb;
       border-top-color: var(--color-ember);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
@@ -157,17 +157,17 @@ type FilterType = 'all' | 'upcoming' | 'past';
     .error {
       text-align: center;
       padding: 3rem 2rem;
-      background: var(--color-rust);
-      border: 1px solid var(--color-clay);
+      background: #fef2f2;
+      border: 1px solid #fecaca;
       border-radius: var(--radius-lg);
-      color: var(--color-cream);
+      color: #991b1b;
     }
 
     .retry-btn {
       margin-top: 1rem;
       padding: 0.6em 1.5em;
-      background: var(--color-cream);
-      color: var(--color-rust);
+      background: #991b1b;
+      color: #ffffff;
       border: none;
       border-radius: 100px;
       font-weight: 500;
@@ -176,7 +176,7 @@ type FilterType = 'all' | 'upcoming' | 'past';
     }
 
     .retry-btn:hover {
-      background: var(--color-sand);
+      background: #7f1d1d;
     }
 
     .empty-state {

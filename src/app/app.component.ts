@@ -1,18 +1,24 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from './components/header/header.component';
 import { EventListComponent } from './components/event-list/event-list.component';
+import { ImageBreakComponent } from './components/image-break/image-break.component';
 import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HeaderComponent, EventListComponent, FooterComponent],
+  imports: [HeaderComponent, EventListComponent, ImageBreakComponent, FooterComponent],
   template: `
     <app-header />
     <main class="section-light">
       <app-event-list />
     </main>
-    <section class="about-section section-contour" id="about" aria-labelledby="about-heading">
+    <app-image-break
+      headline="Built by Curiosity"
+      subtext="Real conversations about AI, right here in the Gorge"
+      imageSrc="/images/break-community.jpg"
+      altText="Community members at an AI Collective meetup" />
+    <section class="about-section" id="about" aria-labelledby="about-heading">
       <div class="about-container">
         <div class="about-grid">
           <div class="about-text">
@@ -60,6 +66,11 @@ import { FooterComponent } from './components/footer/footer.component';
         </div>
       </div>
     </section>
+    <app-image-break
+      headline="Where the River Meets the Ridge"
+      subtext="Hood River, Oregon"
+      imageSrc="/images/break-gorge.jpg"
+      altText="Columbia River Gorge panorama" />
     <section class="location-section section-light" id="location" aria-labelledby="location-heading">
       <div class="location-container">
         <h2 id="location-heading">Join us in <em>Hood River</em></h2>
@@ -93,7 +104,7 @@ import { FooterComponent } from './components/footer/footer.component';
       padding: 5rem 0;
       position: relative;
       overflow: hidden;
-      background: var(--color-midnight);
+      background: #f9fafb;
     }
 
     .about-container {
@@ -120,7 +131,7 @@ import { FooterComponent } from './components/footer/footer.component';
       font-size: clamp(2rem, 4vw, 3rem);
       letter-spacing: -0.02em;
       margin-bottom: 1.5rem;
-      color: var(--color-cream);
+      color: var(--color-light-text);
     }
 
     .about-section h2 em {
@@ -129,7 +140,7 @@ import { FooterComponent } from './components/footer/footer.component';
     }
 
     .about-text p {
-      color: var(--color-sand);
+      color: var(--color-light-text-muted);
       margin-bottom: 1.5rem;
       font-size: 1.05rem;
       line-height: 1.7;
@@ -154,7 +165,7 @@ import { FooterComponent } from './components/footer/footer.component';
       height: 40px;
       min-width: 40px;
       border-radius: var(--radius-sm);
-      background: rgba(255, 87, 34, 0.15);
+      background: rgba(255, 105, 0, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -166,12 +177,12 @@ import { FooterComponent } from './components/footer/footer.component';
       font-size: 1rem;
       font-weight: 600;
       margin-bottom: 0.2em;
-      color: var(--color-cream);
+      color: var(--color-light-text);
     }
 
     .about-feature p {
       font-size: 0.9rem;
-      color: var(--color-sand);
+      color: var(--color-light-text-muted);
       line-height: 1.5;
       margin: 0;
     }
@@ -195,10 +206,7 @@ import { FooterComponent } from './components/footer/footer.component';
     }
 
     .location-section h2 em {
-      background: var(--gradient-ember);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--color-ember);
       font-style: italic;
     }
 

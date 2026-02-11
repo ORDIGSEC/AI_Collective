@@ -34,6 +34,7 @@ import { Component } from '@angular/core';
       </div>
       <div class="footer-credit">
         <span>© {{ currentYear }} Hood River AI Collective</span>
+        <span class="footer-contact">Matt Fullerton &mdash; <a href="mailto:matt&#64;hoodriveraicollective.com">matt&#64;hoodriveraicollective.com</a></span>
       </div>
     </footer>
   `,
@@ -111,6 +112,18 @@ import { Component } from '@angular/core';
       font-size: 0.8rem;
       color: var(--color-stone);
       font-family: var(--font-mono);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-contact a {
+      color: var(--color-ember);
+      text-decoration: none;
+    }
+
+    .footer-contact a:hover {
+      text-decoration: underline;
     }
 
     @media (max-width: 640px) {

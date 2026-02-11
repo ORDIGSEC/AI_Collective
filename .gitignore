@@ -232,6 +232,7 @@ src/app/components/shared/
 
 # Claude session history (local only)
 CHANGELOG.md
+TODO.md
 
 # Local helper scripts and troubleshooting tools (not for repo)
 scripts-local/

@@ -67,16 +67,16 @@ import { FooterComponent } from './components/footer/footer.component';
       </div>
     </section>
     <app-image-break
-      headline="Where the River Meets the Ridge"
-      subtext="Hood River, Oregon"
-      imageSrc="/images/break-gorge.jpg"
+      headline="Hood River, Oregon"
+      subtext=""
+      imageSrc="/images/break-gorge.png"
       altText="Columbia River Gorge panorama" />
     <section class="location-section section-light" id="location" aria-labelledby="location-heading">
       <div class="location-container">
-        <h2 id="location-heading">Join us in <em>Hood River</em></h2>
+        <h2 id="location-heading">Join us at <em>Forge</em></h2>
         <p class="location-details">
-          We meet twice monthly on midweek days in Hood River, Oregon.
-          Check the events above for specific venues and times.
+          420 Industrial Street<br />
+          Hood River, Oregon 97041
         </p>
       </div>
     </section>

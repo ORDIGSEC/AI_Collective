@@ -36,7 +36,7 @@ Unified deployment serving two sites via nginx reverse proxy:
 ## Architecture
 
 ```
-git push main → GitHub Actions → GHCR images → Watchtower (polls 3min) → Live
+PR → merge to main → GitHub Actions → GHCR images → Watchtower (polls 3min) → Live
 
 Production Stack (single docker-compose.yml):
   nginx-proxy :8080
@@ -114,7 +114,31 @@ Both require `googleApiKey` and `calendarId` for Google Calendar integration.
 
 **Style strategy:** Most components use inline `styles: []` in `@Component()`; EventCardExpanded uses external `.scss` file. All colors via CSS variables — no hardcoded color values in components.
 
-## Development Guidelines
+## Development Workflow
+
+**Branch protection is enforced on `main` — no direct pushes.** All changes must go through a PR with passing status checks (`build-frontend`, `build-backend`).
+
+Use git worktrees to work on feature branches without disturbing the main checkout:
+
+```bash
+# 1. Create a worktree for your feature branch
+git worktree add ../hrmeetup-feature my-feature-branch
+
+# 2. Work in the worktree, commit changes
+cd ../hrmeetup-feature
+# ... make changes, commit ...
+
+# 3. Push the branch and create a PR
+git push -u origin my-feature-branch
+gh pr create --title "feat: description" --body "Summary of changes"
+
+# 4. After PR merges, clean up
+cd /home/m4tt/hrmeetup-website
+git worktree remove ../hrmeetup-feature
+git pull  # Update main with the merged changes
+```
+
+**The full cycle:** worktree → commit → push branch → PR → CI passes → merge → `git pull` on main → Watchtower auto-deploys.
 
 ### Helper Scripts and Local Files
 

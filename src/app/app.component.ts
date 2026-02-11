@@ -16,7 +16,7 @@ import { FooterComponent } from './components/footer/footer.component';
     <app-image-break
       headline="Built by Curiosity"
       subtext="Real conversations about AI, right here in the Gorge"
-      imageSrc="/images/break-community.jpg"
+      imageSrc="/images/break-community.png"
       altText="Community members at an AI Collective meetup" />
     <section class="about-section" id="about" aria-labelledby="about-heading">
       <div class="about-container">

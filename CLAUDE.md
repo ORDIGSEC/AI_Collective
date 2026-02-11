@@ -94,23 +94,24 @@ Environment files (`src/environments/`):
 
 Both require `googleApiKey` and `calendarId` for Google Calendar integration.
 
-## Design System — "Alpine Intelligence"
+## Design System — "Clean Outdoor"
 
 **Colors (CSS variables in `styles.scss`):**
-- Backgrounds: `--color-midnight` (#1a1a1a), `--color-charcoal` (#2a2a2a)
-- Text: `--color-cream` (#f5f1e8), `--color-sand` (#d4cbb8)
-- Accent: `--color-ember` (#ff5722) — orange, NOT blue or red
+- Backgrounds: `--color-cream` (#ffffff), `--color-graphite` / `--color-light-bg` (#f9fafb)
+- Dark accents: `--color-midnight` (#32373c), `--color-charcoal` (#4a5057)
+- Text: `--color-light-text` (#1f2937), `--color-light-text-muted` / `--color-sand` (#6b7280)
+- Accent: `--color-ember` (#ff6900) — orange, NOT blue or red
 - Natural: `--color-sage` (#8b9a7f)
 - **No blue colors anywhere** — deliberately avoids generic AI aesthetic
 
 **Typography:**
-- Display: `Anybody` (geometric, outdoor-tech)
-- Body: `DM Sans` (clean, readable)
-- Mono: `IBM Plex Mono` (technical)
+- All fonts: System font stack (`system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`)
+- Mono: `ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace`
+- No Google Fonts imports — fast loading, no layout shift
 
 **Spacing:** 8px base grid (`--space-1` through `--space-8`)
 
-**Patterns:** Topographic contour lines, glassmorphism cards (backdrop-filter blur), radial gradient backgrounds
+**Design principles:** Light mode only, flat design (no glassmorphism/backdrop-filter), no topographic patterns, pill-shaped buttons (`border-radius: 9999px`), subtle shadows, generous white space, orange as accent only
 
 **Style strategy:** Most components use inline `styles: []` in `@Component()`; EventCardExpanded uses external `.scss` file. All colors via CSS variables — no hardcoded color values in components.
 

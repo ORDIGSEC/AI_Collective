@@ -40,9 +40,9 @@ import { Component } from '@angular/core';
   styles: [`
     .site-footer {
       padding: 3rem 0 2rem;
-      background: var(--color-midnight);
-      color: var(--color-sand);
-      border-top: 1px solid var(--contour-medium);
+      background: #f9fafb;
+      color: var(--color-light-text-muted);
+      border-top: 1px solid #e5e7eb;
       position: relative;
     }
 
@@ -65,7 +65,7 @@ import { Component } from '@angular/core';
       font-family: var(--font-display);
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--color-cream);
+      color: var(--color-light-text);
     }
 
     .footer-tagline {
@@ -88,8 +88,8 @@ import { Component } from '@angular/core';
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: rgba(255, 87, 34, 0.1);
-      border: 1px solid rgba(255, 87, 34, 0.2);
+      background: rgba(255, 105, 0, 0.08);
+      border: 1px solid rgba(255, 105, 0, 0.15);
       color: var(--color-ember);
       transition: all var(--transition-spring);
       text-decoration: none;
@@ -97,15 +97,15 @@ import { Component } from '@angular/core';
 
     .footer-links a:hover {
       background: var(--color-ember);
-      color: var(--color-cream);
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: var(--shadow-ember-glow);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
     }
 
     .footer-credit {
       text-align: center;
       padding: 1.5rem var(--gutter) 0;
-      border-top: 1px solid var(--contour-light);
+      border-top: 1px solid #e5e7eb;
       max-width: var(--max-width);
       margin: 0 auto;
       font-size: 0.8rem;

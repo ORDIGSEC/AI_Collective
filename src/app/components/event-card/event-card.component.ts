@@ -96,22 +96,20 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
       grid-template-columns: 80px 1fr;
       gap: 1.5rem;
       padding: 2rem;
-      background: rgba(255, 255, 255, 0.8);
-      border: 1px solid rgba(74, 74, 74, 0.15);
-      border-left: 1px solid rgba(74, 74, 74, 0.15);
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-left: 1px solid #e5e7eb;
       border-radius: var(--radius-md);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-sm);
       transition: all var(--transition-base);
       align-items: start;
       position: relative;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
     }
 
     .event-card:hover {
-      box-shadow: 0 8px 24px rgba(255, 87, 34, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-md);
       transform: translateY(-2px);
-      border-color: rgba(255, 87, 34, 0.3);
+      border-color: #d1d5db;
       border-left-color: var(--color-ember);
       border-left-width: 4px;
       padding-left: calc(2rem - 3px);
@@ -128,7 +126,7 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
       padding: 1rem 0.5rem;
       text-align: center;
       line-height: 1.2;
-      box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
+      box-shadow: 0 2px 8px rgba(255, 105, 0, 0.25);
     }
 
     .event-date-badge .month {
@@ -214,8 +212,8 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
     }
 
     .event-card.expandable:hover {
-      box-shadow: var(--shadow-ember-strong);
-      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
     }
 
     .event-header {
@@ -238,7 +236,7 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
     }
 
     .expand-btn:hover {
-      background: rgba(255, 87, 34, 0.1);
+      background: rgba(255, 105, 0, 0.1);
     }
 
     .expand-btn svg {
@@ -258,8 +256,8 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
       font-weight: 600;
       font-family: var(--font-mono);
       color: var(--color-ember);
-      background: rgba(255, 87, 34, 0.1);
-      border: 1px solid rgba(255, 87, 34, 0.2);
+      background: rgba(255, 105, 0, 0.08);
+      border: 1px solid rgba(255, 105, 0, 0.2);
       padding: 0.35em 0.8em;
       border-radius: 100px;
       letter-spacing: 0.02em;
@@ -268,7 +266,7 @@ import { EventCardExpandedComponent } from '../event-card-expanded/event-card-ex
     .expanded-content {
       margin-top: 1.5rem;
       padding-top: 1.5rem;
-      border-top: 1px solid rgba(74, 74, 74, 0.15);
+      border-top: 1px solid #e5e7eb;
       animation: slideDown 0.3s ease-out;
     }
 

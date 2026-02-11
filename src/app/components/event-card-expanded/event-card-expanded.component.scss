@@ -32,9 +32,9 @@
   gap: 1rem;
   align-items: flex-start;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.5);
+  background: #f9fafb;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(74, 74, 74, 0.1);
+  border: 1px solid #e5e7eb;
 }
 
 .speaker-photo {
@@ -43,7 +43,7 @@
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
-  border: 2px solid rgba(255, 87, 34, 0.2);
+  border: 2px solid rgba(255, 105, 0, 0.2);
 }
 
 .speaker-photo img {
@@ -83,7 +83,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(255, 87, 34, 0.1);
+  background: rgba(255, 105, 0, 0.08);
   color: var(--color-ember);
   transition: all var(--transition-base);
   text-decoration: none;
@@ -129,8 +129,8 @@
   font-weight: 600;
   color: var(--color-ember);
   padding: 0.4em 0.8em;
-  background: rgba(255, 87, 34, 0.08);
-  border: 1px solid rgba(255, 87, 34, 0.2);
+  background: rgba(255, 105, 0, 0.06);
+  border: 1px solid rgba(255, 105, 0, 0.2);
   border-radius: 6px;
   text-align: center;
   width: fit-content;
@@ -168,8 +168,8 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(74, 74, 74, 0.1);
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
   border-radius: var(--radius-sm);
   color: var(--color-light-text);
   text-decoration: none;
@@ -177,7 +177,7 @@
 }
 
 .resource-link:hover {
-  background: rgba(255, 87, 34, 0.1);
+  background: rgba(255, 105, 0, 0.08);
   border-color: var(--color-ember);
   transform: translateX(4px);
 }
@@ -207,7 +207,7 @@
 
 .logistics-item {
   padding: 1rem;
-  background: rgba(255, 87, 34, 0.05);
+  background: rgba(255, 105, 0, 0.04);
   border-left: 3px solid var(--color-ember);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }

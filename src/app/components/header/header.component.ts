@@ -7,9 +7,6 @@ import { Component, HostListener } from '@angular/core';
   template: `
     <nav class="site-nav" [class.scrolled]="isScrolled" aria-label="Main navigation">
       <div class="nav-inner">
-        <a href="/" class="nav-logo" aria-label="Hood River AI Collective home">
-          <span class="logo-text">HR AI Collective</span>
-        </a>
         <ul class="nav-links">
           <li><a href="#events">Events</a></li>
           <li><a href="#about">About</a></li>
@@ -80,27 +77,10 @@ import { Component, HostListener } from '@angular/core';
     .nav-inner {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       max-width: var(--max-width);
       margin: 0 auto;
       padding: 0 var(--gutter);
-    }
-
-    .nav-logo {
-      text-decoration: none;
-      transition: transform var(--transition-base);
-    }
-
-    .nav-logo:hover {
-      transform: translateY(-1px);
-    }
-
-    .logo-text {
-      font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: var(--font-weight-black);
-      color: var(--color-light-text);
-      letter-spacing: -0.02em;
     }
 
     .nav-links {

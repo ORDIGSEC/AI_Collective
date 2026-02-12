@@ -13,11 +13,6 @@ import { FooterComponent } from './components/footer/footer.component';
     <main class="section-light">
       <app-event-list />
     </main>
-    <app-image-break
-      headline="Built by Curiosity"
-      subtext="Real conversations about AI, right here in the Gorge"
-      imageSrc="/images/break-community.png"
-      altText="Community members at an AI Collective meetup" />
     <section class="about-section" id="about" aria-labelledby="about-heading">
       <div class="about-container">
         <div class="about-grid">
@@ -69,7 +64,7 @@ import { FooterComponent } from './components/footer/footer.component';
     <app-image-break
       headline="Hood River, Oregon"
       subtext=""
-      imageSrc="/images/break-gorge.png"
+      videoSrc="/images/break-gorge.mp4"
       altText="Columbia River Gorge panorama" />
     <section class="location-section section-light" id="location" aria-labelledby="location-heading">
       <div class="location-container">

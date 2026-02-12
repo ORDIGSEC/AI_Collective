@@ -5,7 +5,9 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   template: `
     <div class="image-break">
-      @if (imageSrc) {
+      @if (videoSrc) {
+        <video [src]="videoSrc" autoplay loop muted playsinline></video>
+      } @else if (imageSrc) {
         <img [src]="imageSrc" [alt]="altText" loading="lazy" decoding="async" />
       }
       <div class="overlay"></div>
@@ -30,7 +32,7 @@ import { Component, Input } from '@angular/core';
       background: linear-gradient(135deg, var(--color-midnight), var(--color-charcoal));
     }
 
-    img {
+    img, video {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -90,5 +92,6 @@ export class ImageBreakComponent {
   @Input({ required: true }) headline = '';
   @Input() subtext = '';
   @Input() imageSrc = '';
+  @Input() videoSrc = '';
   @Input() altText = '';
 }

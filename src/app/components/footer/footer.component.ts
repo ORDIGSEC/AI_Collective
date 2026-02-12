@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 
 @Component({
   selector: 'app-footer',
@@ -31,6 +31,13 @@ import { Component } from '@angular/core';
             </svg>
           </a>
         </div>
+      </div>
+      <div class="footer-clawd">
+        <img src="/images/clawd.png" alt="Clawd mascot" class="clawd-img" />
+        <span class="clawd-text" [class.fade-out]="fading()">
+          {{ currentWord() }} with
+          <a href="https://claude.ai/claude-code" target="_blank" rel="noopener noreferrer">Claude Code</a>
+        </span>
       </div>
       <div class="footer-credit">
         <span>© {{ currentYear }} Hood River AI Collective</span>
@@ -117,6 +124,43 @@ import { Component } from '@angular/core';
       gap: 0.5rem;
     }
 
+    .footer-clawd {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      max-width: var(--max-width);
+      margin: 0 auto 1.5rem;
+      padding: 0 var(--gutter);
+    }
+
+    .clawd-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .clawd-text {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-stone);
+      transition: opacity 0.3s ease;
+      opacity: 1;
+    }
+
+    .clawd-text.fade-out {
+      opacity: 0;
+    }
+
+    .clawd-text a {
+      color: var(--color-ember);
+      text-decoration: none;
+    }
+
+    .clawd-text a:hover {
+      text-decoration: underline;
+    }
+
     .footer-contact a {
       color: var(--color-ember);
       text-decoration: none;
@@ -139,6 +183,48 @@ import { Component } from '@angular/core';
     }
   `]
 })
-export class FooterComponent {
+export class FooterComponent implements OnInit, OnDestroy {
   currentYear = new Date().getFullYear();
+  currentWord = signal('Cooked');
+  fading = signal(false);
+
+  private words = [
+    'Accomplished', 'Actioned', 'Actualized', 'Baked', 'Brewed',
+    'Calculated', 'Cerebrated', 'Churned', 'Clauded', 'Coalesced',
+    'Cogitated', 'Computed', 'Conjured', 'Considered', 'Cooked',
+    'Crafted', 'Created', 'Crunched', 'Deliberated', 'Determined',
+    'Done', 'Effected', 'Finagled', 'Forged', 'Formed',
+    'Generated', 'Hatched', 'Herded', 'Honked', 'Hustled',
+    'Ideated', 'Inferred', 'Manifested', 'Marinated', 'Moseyed',
+    'Mulled', 'Mustered', 'Mused', 'Noodled', 'Percolated',
+    'Pondered', 'Processed', 'Puttered', 'Reticulated', 'Ruminated',
+    'Schlepped', 'Shucked', 'Simmered', 'Smooshed', 'Spun',
+    'Stewed', 'Synthesized', 'Thought', 'Transmuted', 'Vibed', 'Worked'
+  ];
+  private wordIndex = 0;
+  private intervalId: ReturnType<typeof setInterval> | null = null;
+
+  ngOnInit() {
+    this.shuffle();
+    this.currentWord.set(this.words[0]);
+    this.intervalId = setInterval(() => {
+      this.fading.set(true);
+      setTimeout(() => {
+        this.wordIndex = (this.wordIndex + 1) % this.words.length;
+        this.currentWord.set(this.words[this.wordIndex]);
+        this.fading.set(false);
+      }, 300);
+    }, 3000);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId) clearInterval(this.intervalId);
+  }
+
+  private shuffle() {
+    for (let i = this.words.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.words[i], this.words[j]] = [this.words[j], this.words[i]];
+    }
+  }
 }

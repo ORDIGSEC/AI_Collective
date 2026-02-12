@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-image-break',
   standalone: true,
   template: `
-    <div class="image-break">
+    <div class="image-break" [id]="sectionId || null">
       @if (videoSrc) {
         <video [src]="videoSrc" autoplay loop muted playsinline></video>
       } @else if (imageSrc) {
@@ -15,6 +15,11 @@ import { Component, Input } from '@angular/core';
         <h2>{{ headline }}</h2>
         @if (subtext) {
           <p>{{ subtext }}</p>
+        }
+        @if (linkUrl) {
+          <a [href]="linkUrl" target="_blank" rel="noopener noreferrer" class="break-link">
+            {{ linkText }}
+          </a>
         }
       </div>
     </div>
@@ -75,6 +80,27 @@ import { Component, Input } from '@angular/core';
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     }
 
+    .break-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.6rem 1.5rem;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .break-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
     @media (max-width: 768px) {
       .image-break {
         height: clamp(220px, 35vh, 360px);
@@ -93,5 +119,8 @@ export class ImageBreakComponent {
   @Input() subtext = '';
   @Input() imageSrc = '';
   @Input() videoSrc = '';
+  @Input() linkUrl = '';
+  @Input() linkText = '';
+  @Input() sectionId = '';
   @Input() altText = '';
 }

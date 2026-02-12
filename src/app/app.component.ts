@@ -62,19 +62,13 @@ import { FooterComponent } from './components/footer/footer.component';
       </div>
     </section>
     <app-image-break
-      headline="Hood River, Oregon"
-      subtext=""
+      headline="Join us at Forge"
+      subtext="420 Industrial Street · Hood River, Oregon 97041"
       videoSrc="/images/break-gorge.mp4"
-      altText="Columbia River Gorge panorama" />
-    <section class="location-section section-light" id="location" aria-labelledby="location-heading">
-      <div class="location-container">
-        <h2 id="location-heading">Join us at <em>Forge</em></h2>
-        <p class="location-details">
-          420 Industrial Street<br />
-          Hood River, Oregon 97041
-        </p>
-      </div>
-    </section>
+      linkUrl="https://maps.app.goo.gl/yGaj4eg97KxUiGJSA"
+      linkText="Get Directions"
+      sectionId="location"
+      altText="Coworking space atmosphere" />
     <app-footer />
   `,
   styles: [`
@@ -180,37 +174,6 @@ import { FooterComponent } from './components/footer/footer.component';
       color: var(--color-light-text-muted);
       line-height: 1.5;
       margin: 0;
-    }
-
-    /* Location Section */
-    .location-section {
-      padding: 5rem 0;
-      text-align: center;
-    }
-
-    .location-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    .location-section h2 {
-      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-      margin-bottom: 1rem;
-      color: var(--color-light-text);
-    }
-
-    .location-section h2 em {
-      color: var(--color-ember);
-      font-style: italic;
-    }
-
-    .location-details {
-      color: var(--color-light-text-muted);
-      font-size: 1.05rem;
-      max-width: 500px;
-      margin: 0 auto;
-      line-height: 1.7;
     }
 
     @media (max-width: 768px) {

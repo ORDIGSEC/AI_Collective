@@ -150,11 +150,14 @@ import { Component, HostListener } from '@angular/core';
       text-align: center;
       position: relative;
       overflow: hidden;
-      background: var(--color-cream);
+      background: url('/images/break-community.png') center/cover no-repeat;
     }
 
     .hero::before {
-      display: none;
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
     }
 
     .hero-inner {
@@ -167,10 +170,11 @@ import { Component, HostListener } from '@angular/core';
 
     .hero h1 {
       font-size: clamp(3rem, 7vw, 5.5rem);
-      color: var(--color-light-text);
+      color: #fff;
       letter-spacing: -0.03em;
       margin-bottom: 1.5rem;
       font-weight: var(--font-weight-black);
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
       animation: fadeInUp 0.8s ease-out 0.1s both;
     }
 
@@ -181,11 +185,12 @@ import { Component, HostListener } from '@angular/core';
 
     .hero-subtitle {
       font-size: clamp(1.1rem, 2vw, 1.35rem);
-      color: var(--color-light-text-muted);
+      color: rgba(255, 255, 255, 0.9);
       max-width: 640px;
       margin: 0 auto 3rem;
       font-weight: var(--font-weight-medium);
       line-height: 1.7;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
       animation: fadeInUp 0.8s ease-out 0.2s both;
     }
 
@@ -203,7 +208,8 @@ import { Component, HostListener } from '@angular/core';
       gap: 0.6em;
       font-size: 0.95rem;
       font-weight: var(--font-weight-medium);
-      color: var(--color-light-text-muted);
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     }
 
     .hero-meta-icon {

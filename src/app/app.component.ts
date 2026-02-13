@@ -62,7 +62,7 @@ import { FooterComponent } from './components/footer/footer.component';
       </div>
     </section>
     <app-image-break
-      headline="Join us at Forge"
+      headline="Join us at <em>Forge</em>"
       subtext="420 Industrial Street · Hood River, Oregon 97041"
       videoSrc="/images/break-gorge.mp4"
       linkUrl="https://maps.app.goo.gl/yGaj4eg97KxUiGJSA"

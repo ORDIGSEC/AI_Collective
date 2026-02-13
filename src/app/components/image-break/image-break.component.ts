@@ -12,7 +12,7 @@ import { Component, Input } from '@angular/core';
       }
       <div class="overlay"></div>
       <div class="content">
-        <h2>{{ headline }}</h2>
+        <h2 [innerHTML]="headline"></h2>
         @if (subtext) {
           <p>{{ subtext }}</p>
         }
@@ -71,6 +71,11 @@ import { Component, Input } from '@angular/core';
       letter-spacing: -0.02em;
       margin: 0 0 0.5rem;
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 :is(em) {
+      font-style: italic;
+      color: var(--color-ember);
     }
 
     p {

@@ -165,11 +165,11 @@ The `main` branch is protected with the following rules:
 
 ### Design System
 
-See `docs/DESIGN-SYSTEM.md` for:
-- Color palette (Alpine Intelligence theme)
-- Typography (Anybody, DM Sans, IBM Plex Mono)
-- Component patterns
-- **No generic AI aesthetics** - Avoid purple gradients, robot illustrations
+The design system ("Clean Outdoor") is documented in `CLAUDE.md` under "Design System". Key points:
+- Light mode only, flat design, no glassmorphism
+- Colors via CSS variables — orange accent (`--color-ember`), no blue
+- System font stack — no Google Fonts
+- Pill-shaped buttons, subtle shadows, generous white space
 
 ---
 
@@ -295,56 +295,11 @@ Brief description of your changes.
 
 ## Development Setup
 
-### Frontend Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm start
-
-# Visit http://localhost:4200
-```
-
-### Backend Development
-
-```bash
-# Navigate to backend
-cd backend
-
-# Install dependencies
-npm install
-
-# Copy environment example
-cp .env.example .env
-
-# Edit .env with your settings
-nano .env
-
-# Run development server
-npm run dev
-
-# Backend runs on http://localhost:3000
-```
-
-### Full Stack with Docker
-
-```bash
-# Start all services
-docker compose up -d
-
-# Check status
-./deploy.sh status
-
-# View logs
-./deploy.sh logs app      # Frontend
-./deploy.sh logs backend  # Backend
-./deploy.sh logs db       # Database
-
-# Stop services
-docker compose down
-```
+See **[docs/development.md](docs/development.md)** for complete development setup instructions including:
+- Frontend and backend development servers
+- Docker Compose local testing
+- IDE configuration and debugging tips
+- Creating new components and services
 
 ---
 

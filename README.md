@@ -129,9 +129,11 @@ For detailed deployment instructions, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
 
 ## Documentation
 
-- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide for Cloudflare Tunnel setup
-- **[CLAUDE.md](CLAUDE.md)** - Instructions for Claude Code when working on this repo
-- **[docs/development.md](docs/development.md)** - Angular development guide
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Deployment, operations, and troubleshooting guide
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines, coding standards, PR process
+- **[docs/development.md](docs/development.md)** - Development setup, IDE config, debugging
+- **[NEWEVENTS.md](NEWEVENTS.md)** - Google Calendar event formatting guide
+- **[CLAUDE.md](CLAUDE.md)** - Instructions for Claude Code and design system reference
 
 ## Contributing
 

@@ -32,22 +32,21 @@ import { Component, OnInit, OnDestroy, signal } from '@angular/core';
           </a>
         </div>
       </div>
-      <div class="footer-clawd">
-        <img src="/images/clawd.png" alt="Clawd mascot" class="clawd-img" />
-        <span class="clawd-text" [class.fade-out]="fading()">
-          {{ currentWord() }} with
-          <a href="https://claude.ai/claude-code" target="_blank" rel="noopener noreferrer">Claude Code</a>
-        </span>
-      </div>
-      <div class="footer-credit">
-        <span>© {{ currentYear }} Hood River AI Collective</span>
-        <span class="footer-contact">Matt Fullerton &mdash; <a href="mailto:matt&#64;hoodriveraicollective.com">matt&#64;hoodriveraicollective.com</a></span>
+      <div class="footer-bottom">
+        <div class="footer-clawd">
+          <img src="/images/clawd.png" alt="Clawd mascot" class="clawd-img" />
+          <span class="clawd-text" [class.fade-out]="fading()">
+            {{ currentWord() }} with
+            <a href="https://claude.ai/claude-code" target="_blank" rel="noopener noreferrer">Claude Code</a>
+          </span>
+        </div>
+        <span class="footer-credit">© {{ currentYear }} · <a href="mailto:matt&#64;hoodriveraicollective.com">matt&#64;hoodriveraicollective.com</a></span>
       </div>
     </footer>
   `,
   styles: [`
     .site-footer {
-      padding: 3rem 0 2rem;
+      padding: 2rem 0 1.5rem;
       background: #f9fafb;
       color: var(--color-light-text-muted);
       border-top: 1px solid #e5e7eb;
@@ -59,7 +58,7 @@ import { Component, OnInit, OnDestroy, signal } from '@angular/core';
       justify-content: space-between;
       align-items: center;
       max-width: var(--max-width);
-      margin: 0 auto 2rem;
+      margin: 0 auto 1rem;
       padding: 0 var(--gutter);
     }
 
@@ -110,28 +109,35 @@ import { Component, OnInit, OnDestroy, signal } from '@angular/core';
       box-shadow: var(--shadow-sm);
     }
 
-    .footer-credit {
-      text-align: center;
-      padding: 1.5rem var(--gutter) 0;
-      border-top: 1px solid #e5e7eb;
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       max-width: var(--max-width);
       margin: 0 auto;
-      font-size: 0.8rem;
+      padding: 1rem var(--gutter) 0;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .footer-credit {
+      font-size: 0.75rem;
       color: var(--color-stone);
       font-family: var(--font-mono);
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+    }
+
+    .footer-credit a {
+      color: var(--color-ember);
+      text-decoration: none;
+    }
+
+    .footer-credit a:hover {
+      text-decoration: underline;
     }
 
     .footer-clawd {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      max-width: var(--max-width);
-      margin: 0 auto 1.5rem;
-      padding: 0 var(--gutter);
+      gap: 0.5rem;
     }
 
     .clawd-img {
@@ -161,24 +167,21 @@ import { Component, OnInit, OnDestroy, signal } from '@angular/core';
       text-decoration: underline;
     }
 
-    .footer-contact a {
-      color: var(--color-ember);
-      text-decoration: none;
-    }
-
-    .footer-contact a:hover {
-      text-decoration: underline;
-    }
-
     @media (max-width: 640px) {
       .footer-inner {
         flex-direction: column;
-        gap: 2rem;
+        gap: 1.5rem;
         text-align: center;
       }
 
       .footer-brand {
         align-items: center;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
       }
     }
   `]

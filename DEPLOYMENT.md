@@ -617,7 +617,7 @@ crontab -e
 
 ## Support
 
-- **Project Documentation**: README.md, CLAUDE.md, PROJECT.md
+- **Project Documentation**: README.md, CLAUDE.md, CONTRIBUTING.md
 - **Docker Docs**: https://docs.docker.com/
 - **GitHub Actions**: https://docs.github.com/en/actions
 - **Watchtower**: https://containrrr.dev/watchtower/

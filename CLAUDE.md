@@ -17,7 +17,7 @@ npm test                        # Run Karma/Jasmine tests (watch mode)
 
 # Operations (see DEPLOYMENT.md for full details)
 ./deploy.sh status              # Container status and health
-./deploy.sh logs [service]      # View logs (proxy, app, backend, db, open-webui, ollama, watchtower)
+./deploy.sh logs [service]      # View logs (proxy, app, backend, db, watchtower)
 ./deploy.sh pull                # Git pull + recreate containers
 ./deploy.sh force               # Force pull latest images + recreate
 ./deploy.sh rollback <svc> <tag> # Rollback to specific version
@@ -29,27 +29,27 @@ docker compose down             # Stop all services
 
 ## Project Overview
 
-Unified deployment serving two sites via nginx reverse proxy:
+Website-only deployment via nginx reverse proxy:
 - **Hood River AI Collective** (hoodriveraicollective.com): Angular 19 SPA for monthly AI Meetup. Events loaded from Google Calendar API (client-side, no backend needed for events).
-- **Open WebUI** (chat.hoodriveraicollective.com): AI chat interface powered by Ollama.
+
+Open WebUI and Ollama run in a separate stack (`~/openwebui-github`).
 
 ## Architecture
 
 ```
 PR → merge to main → GitHub Actions → GHCR images → Watchtower (polls 3min) → Live
 
-Production Stack (single docker-compose.yml):
+Website Stack (docker-compose.yml):
   nginx-proxy :8080
-  ├── hoodriveraicollective.com → app (Angular SPA on nginx)
-  │   └── backend (Express.js :3000) → db (PostgreSQL :5432)
-  └── chat.hoodriveraicollective.com → open-webui → ollama
+  └── hoodriveraicollective.com → app (Angular SPA on nginx)
+      └── backend (Express.js :3000) → db (PostgreSQL :5432)
+  Watchtower (auto-deploys app + backend from GHCR)
   Cloudflare Tunnel → *.hoodriveraicollective.com
 ```
 
 **Key decisions:**
 - Database is NOT auto-deployed by Watchtower (manual control for schema safety)
 - Multi-arch images (amd64, arm64) on GitHub Container Registry
-- Open WebUI data in external Docker volumes
 
 ### Frontend Architecture
 

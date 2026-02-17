@@ -120,20 +120,6 @@ cmd_status() {
         error "Nginx Proxy: not running"
     fi
 
-    # Check Open WebUI
-    if docker compose ps open-webui | grep -q "Up"; then
-        success "Open WebUI: running"
-    else
-        warning "Open WebUI: not running"
-    fi
-
-    # Check Ollama
-    if docker compose ps ollama | grep -q "Up"; then
-        success "Ollama: running"
-    else
-        warning "Ollama: not running"
-    fi
-
     echo ""
 
     # Show current images
@@ -143,7 +129,6 @@ cmd_status() {
 
     echo ""
     info "Hood River Site: https://hoodriveraicollective.com"
-    info "Open WebUI: https://chat.hoodriveraicollective.com"
     info "Local (proxy): http://localhost:8080"
 }
 

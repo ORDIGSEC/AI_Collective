@@ -9,14 +9,12 @@ services:
       - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app
-      - open-webui
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "--header=Host: hoodriveraicollective.com", "http://127.0.0.1:80/"]
       interval: 30s
       timeout: 10s
       retries: 3
     networks:
-      - frontend
       - backend
 
   # Hood River AI Collective App (Angular + nginx)
@@ -37,7 +35,6 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
-      - frontend
       - backend
 
   # Hood River Backend (Node.js API)
@@ -89,56 +86,6 @@ services:
     networks:
       - backend
 
-  # Open WebUI (AI Chat Interface)
-  open-webui:
-    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG:-main}
-    container_name: open-webui
-    restart: unless-stopped
-    volumes:
-      - openwebui-github_open-webui:/app/backend/data
-    depends_on:
-      - ollama
-    expose:
-      - "8080"  # Internal only
-    environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
-      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:-}
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    networks:
-      - frontend
-      - ai
-
-  # Ollama (Local LLM Server)
-  ollama:
-    image: ollama/ollama:latest
-    container_name: ollama
-    pull_policy: always
-    tty: true
-    restart: unless-stopped
-    volumes:
-      - openwebui-github_ollama:/root/.ollama
-    expose:
-      - "11434"  # Internal only
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-      - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-2}
-      - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-2}
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    networks:
-      - ai
-
   # Watchtower (Auto-deployment)
   watchtower:
     image: containrrr/watchtower
@@ -158,16 +105,8 @@ services:
       - backend
 
 networks:
-  frontend:
-    driver: bridge
   backend:
-    driver: bridge
-  ai:
     driver: bridge
 
 volumes:
   postgres_data:
-  openwebui-github_ollama:
-    external: true
-  openwebui-github_open-webui:
-    external: true

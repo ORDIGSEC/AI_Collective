@@ -117,29 +117,21 @@ Both require `googleApiKey` and `calendarId` for Google Calendar integration.
 
 ## Development Workflow
 
-**Branch protection is enforced on `main` — no direct pushes.** All changes must go through a PR with passing status checks (`build-frontend`, `build-backend`).
+**Branch protection:** CI checks and PR reviews are required for non-admin contributors. The admin (m4tt/ORDIGSEC) can push directly to `main` — no PR needed. Commit and push to main when making changes.
 
-Use git worktrees to work on feature branches without disturbing the main checkout:
+**For non-admin contributors**, use the PR workflow:
 
 ```bash
-# 1. Create a worktree for your feature branch
 git worktree add ../hrmeetup-feature my-feature-branch
-
-# 2. Work in the worktree, commit changes
 cd ../hrmeetup-feature
 # ... make changes, commit ...
-
-# 3. Push the branch and create a PR
 git push -u origin my-feature-branch
 gh pr create --title "feat: description" --body "Summary of changes"
-
-# 4. After PR merges, clean up
+# After PR merges:
 cd /home/m4tt/hrmeetup-website
 git worktree remove ../hrmeetup-feature
-git pull  # Update main with the merged changes
+git pull
 ```
-
-**The full cycle:** worktree → commit → push branch → PR → CI passes → merge → `git pull` on main → Watchtower auto-deploys.
 
 ### Helper Scripts and Local Files
 
@@ -160,3 +152,4 @@ Jasmine/Karma configured but no test files exist yet. Test config in `angular.js
 5. **Database schema changes** — pause Watchtower before migrating to prevent mid-migration backend updates
 6. **Deploy timing** — push to main takes 3-5 minutes to go live (GitHub Actions build + Watchtower poll)
 7. **Rollback** — after pinning a version with `./deploy.sh rollback <service> <tag>`, restore auto-updates later with tag `latest`
+8. **Cloudflared uses REMOTE config, not local file** — The `hr-ai-sites` tunnel is configured via the Cloudflare Zero Trust dashboard (Networks → Tunnels → Configure), NOT the local `/etc/cloudflared/config.yml`. Remote config overrides local. Editing the local file and restarting the service has NO effect on routing. To change where traffic is routed, update the public hostname entries in the Zero Trust dashboard. The local config file exists but is ignored when remote management is enabled.

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Observable, map, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CalendarEvent, GoogleCalendarEvent, GoogleCalendarResponse, ExtendedEvent } from '../models/event.model';
 import { EventDescriptionParser } from '../utils/event-parser';
@@ -114,7 +114,7 @@ export class CalendarService {
       ),
       catchError(error => {
         console.error('Failed to fetch calendar events:', error);
-        return of([]);
+        return throwError(() => error);
       })
     );
   }
@@ -139,7 +139,7 @@ export class CalendarService {
       ),
       catchError(error => {
         console.error('Failed to fetch upcoming events:', error);
-        return of([]);
+        return throwError(() => error);
       })
     );
   }
@@ -162,7 +162,7 @@ export class CalendarService {
       ),
       catchError(error => {
         console.error('Failed to fetch past events:', error);
-        return of([]);
+        return throwError(() => error);
       })
     );
   }
